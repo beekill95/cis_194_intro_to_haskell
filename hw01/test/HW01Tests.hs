@@ -25,15 +25,40 @@ testZeroNumberRev = TestCase (assertEqual "should return empty list" [] (toDigit
 testNumberToDigitsRev :: Test
 testNumberToDigitsRev = TestCase (assertEqual "should return correct order" [4, 3, 2, 1] (toDigitsRev 1234))
 
+-- Exercise 2
+-- Tests for `doubleEveryOther()`.
+testDoubleEmptyList :: Test
+testDoubleEmptyList = TestCase (assertEqual "should just return empty list" [] (doubleEveryOther []))
+
+testDoubleSingleElementList :: Test
+testDoubleSingleElementList = TestCase (assertEqual "should not double the element" [1] (doubleEveryOther [1]))
+
+testDoubleTwoElementsList :: Test
+testDoubleTwoElementsList = TestCase (assertEqual "should only double the first element" [4, 1] (doubleEveryOther [2, 1]))
+
+testDoubleThreeElementsList :: Test
+testDoubleThreeElementsList = TestCase (assertEqual "should only double the second element" [3, 4, 1] (doubleEveryOther [3, 2, 1]))
+
+testDoubleFourElementsList :: Test
+testDoubleFourElementsList = TestCase (assertEqual "should only double the first element and the third element" [8, 3, 4, 1] (doubleEveryOther [4, 3, 2, 1]))
+
+-- Collect all tests.
 tests :: Test
 tests =
   TestList
-    [ TestLabel "testNegativeNumber" testNegativeNumber,
+    [ -- Exercise 1
+      TestLabel "testNegativeNumber" testNegativeNumber,
       TestLabel "testZeroNumber" testZeroNumber,
       TestLabel "testNumberToDigits" testNumberToDigits,
       TestLabel "testNegativeNumberRev" testNegativeNumberRev,
       TestLabel "testZeroNumberRev" testZeroNumberRev,
-      TestLabel "testNumberToDigitsRev" testNumberToDigitsRev
+      TestLabel "testNumberToDigitsRev" testNumberToDigitsRev,
+      -- Exercise 2
+      TestLabel "testDoubleEmptyList" testDoubleEmptyList,
+      TestLabel "testDoubleSingleElementList" testDoubleSingleElementList,
+      TestLabel "testDoubleTwoElementsList" testDoubleTwoElementsList,
+      TestLabel "testDoubleThreeElementsList" testDoubleThreeElementsList,
+      TestLabel "testDoubleFourElementsList" testDoubleFourElementsList
     ]
 
 main :: IO ()
