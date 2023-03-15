@@ -144,7 +144,12 @@ tests =
       TestLabel "testDoubleSingleElementList" testDoubleSingleElementList,
       TestLabel "testDoubleTwoElementsList" testDoubleTwoElementsList,
       TestLabel "testDoubleThreeElementsList" testDoubleThreeElementsList,
-      TestLabel "testDoubleFourElementsList" testDoubleFourElementsList
+      TestLabel "testDoubleFourElementsList" testDoubleFourElementsList,
+      -- Exercise 3
+      TestLabel "testSumDigitsEmptyList" testSumDigitsEmptyList,
+      TestLabel "testSumDigitsSingleOneDigitNumber" testSumDigitsSingleOneDigitNumber,
+      TestLabel "testSumDigitsSingleTwoDigitNumber" testSumDigitsSingleTwoDigitNumber,
+      TestLabel "testSumDigitsMixedNumbers" testSumDigitsMixedNumbers
     ]
 
 main :: IO ()
