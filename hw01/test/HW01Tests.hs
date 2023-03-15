@@ -90,6 +90,44 @@ testDoubleFourElementsList =
         (doubleEveryOther [4, 3, 2, 1])
     )
 
+-- Exercise 3.
+-- Test for `sumDigits()`.
+testSumDigitsEmptyList :: Test
+testSumDigitsEmptyList =
+  TestCase
+    ( assertEqual
+        "should equal 0"
+        0
+        (sumDigits [])
+    )
+
+testSumDigitsSingleOneDigitNumber :: Test
+testSumDigitsSingleOneDigitNumber =
+  TestCase
+    ( assertEqual
+        "should return the number"
+        5
+        (sumDigits [5])
+    )
+
+testSumDigitsSingleTwoDigitNumber :: Test
+testSumDigitsSingleTwoDigitNumber =
+  TestCase
+    ( assertEqual
+        "should add the two digits together"
+        6
+        (sumDigits [15])
+    )
+
+testSumDigitsMixedNumbers :: Test
+testSumDigitsMixedNumbers =
+  TestCase
+    ( assertEqual
+        "should return the sum of all digits."
+        (1 + 6 + 7 + 1 + 2 + 5)
+        (sumDigits [16, 7, 12, 5])
+    )
+
 -- Collect all tests.
 tests :: Test
 tests =

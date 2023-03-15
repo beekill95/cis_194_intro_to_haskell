@@ -1,4 +1,10 @@
-module ValidatingCreditCards (toDigits, toDigitsRev, doubleEveryOther) where
+module ValidatingCreditCards
+  ( toDigits,
+    toDigitsRev,
+    doubleEveryOther,
+    sumDigits,
+  )
+where
 
 -- Exercise 1
 -- Implement `toDigits()` which turns any positive numbers to a list of digits,
@@ -28,3 +34,13 @@ doubleEveryOther (first : second : rest)
 intListLength :: [Integer] -> Integer
 intListLength [] = 0
 intListLength (first : rest) = intListLength rest + 1
+
+-- Exercise 3
+-- Implement `sumDigits()` to sum all digits.
+-- All two-digit numbers are broken into 2 digits and sum with the rest.
+sumDigits :: [Integer] -> Integer
+sumDigits [] = 0
+sumDigits (first : rest)
+  | first < 0 = sumDigits rest
+  | first < 10 = first + sumDigits rest
+  | first < 100 = (first `div` 10) + (first `mod` 10) + sumDigits rest
