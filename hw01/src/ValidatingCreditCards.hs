@@ -3,6 +3,7 @@ module ValidatingCreditCards
     toDigitsRev,
     doubleEveryOther,
     sumDigits,
+    validate,
   )
 where
 
@@ -44,3 +45,12 @@ sumDigits (first : rest)
   | first < 0 = sumDigits rest
   | first < 10 = first + sumDigits rest
   | first < 100 = (first `div` 10) + (first `mod` 10) + sumDigits rest
+
+-- Exercise 4
+-- Validate credit cards' number by checking
+-- if the remainder of the sum of all digits divided by 10 equals 0.
+validate :: Integer -> Bool
+validate = isDivisibleBy10 . sumDigits . doubleEveryOther . toDigits
+
+isDivisibleBy10 :: Integer -> Bool
+isDivisibleBy10 x = x `mod` 10 == 0

@@ -128,6 +128,25 @@ testSumDigitsMixedNumbers =
         (sumDigits [16, 7, 12, 5])
     )
 
+-- Exercise 4.
+testInvalidCreditCardNumber :: Test
+testInvalidCreditCardNumber =
+  TestCase
+    ( assertEqual
+        "should return invalid"
+        False
+        (validate 4012888888881882)
+    )
+
+testValidCreditCardNumber :: Test
+testValidCreditCardNumber =
+  TestCase
+    ( assertEqual
+        "should return valid"
+        True
+        (validate 4012888888881881)
+    )
+
 -- Collect all tests.
 tests :: Test
 tests =
@@ -149,7 +168,10 @@ tests =
       TestLabel "testSumDigitsEmptyList" testSumDigitsEmptyList,
       TestLabel "testSumDigitsSingleOneDigitNumber" testSumDigitsSingleOneDigitNumber,
       TestLabel "testSumDigitsSingleTwoDigitNumber" testSumDigitsSingleTwoDigitNumber,
-      TestLabel "testSumDigitsMixedNumbers" testSumDigitsMixedNumbers
+      TestLabel "testSumDigitsMixedNumbers" testSumDigitsMixedNumbers,
+      -- Exercise 4
+      TestLabel "testInvalidCreditCardNumber" testInvalidCreditCardNumber,
+      TestLabel "testValidCreditCardNumber" testValidCreditCardNumber
     ]
 
 main :: IO ()
