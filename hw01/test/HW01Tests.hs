@@ -1,5 +1,6 @@
 module Main where
 
+import HanoiTowersTests
 import System.Exit
 import Test.HUnit
 import ValidatingCreditCardsTests
@@ -8,7 +9,8 @@ import ValidatingCreditCardsTests
 tests :: Test
 tests =
   TestList
-    [ TestLabel "creditCardsTests" creditCardsTests
+    [ TestLabel "creditCardsTests" creditCardsTests,
+      TestLabel "hanoiTowersTests" hanoiTowersTests
     ]
 
 main :: IO ()

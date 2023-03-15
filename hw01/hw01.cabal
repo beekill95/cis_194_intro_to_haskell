@@ -29,6 +29,7 @@ library
     exposed-modules:
         MyLib
         ValidatingCreditCards
+        HanoiTowers
 
     -- Modules included in this library but not exported.
     -- other-modules:
@@ -44,7 +45,9 @@ test-suite hw01-test
     type: exitcode-stdio-1.0
     hs-source-dirs: test
     main-is: HW01Tests.hs
-    other-modules: ValidatingCreditCardsTests
+    other-modules:
+        ValidatingCreditCardsTests
+        HanoiTowersTests
     build-depends:
         base ^>=4.16.4.0,
         HUnit ^>=1.6,
