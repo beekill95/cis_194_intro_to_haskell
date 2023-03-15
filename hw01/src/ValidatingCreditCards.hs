@@ -19,4 +19,12 @@ reverseList (head : rest) = reverseList rest ++ [head]
 -- Implement `doubleEveryOther()` that double every digit that is second-to-last,
 -- fourth-to-last, etc.
 doubleEveryOther :: [Integer] -> [Integer]
-doubleEveryOther [] = [1]
+doubleEveryOther [] = []
+doubleEveryOther [n] = [n]
+doubleEveryOther (first : second : rest)
+  | even (intListLength rest) = [first * 2, second] ++ doubleEveryOther rest
+  | otherwise = [first, second * 2] ++ doubleEveryOther rest
+
+intListLength :: [Integer] -> Integer
+intListLength [] = 0
+intListLength (first : rest) = intListLength rest + 1
