@@ -60,3 +60,11 @@ insert newMessage@(LogMessage _ newTime _) (Node leftSubtree oldMessage@(LogMess
   if oldTime >= newTime
     then Node (insert newMessage leftSubtree) oldMessage rightSubtree
     else Node leftSubtree oldMessage (insert newMessage rightSubtree)
+
+-- Exercise 3.
+-- Implement function `build()` o build a MessageTree
+-- from a list of LogMessage.
+build :: [LogMessage] -> MessageTree
+build = foldl insertFlip Leaf
+  where
+    insertFlip = flip insert
