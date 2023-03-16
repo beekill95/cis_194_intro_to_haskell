@@ -48,6 +48,7 @@ test-suite hw02-tests
         Exercise01Tests
         Exercise02Tests
         Exercise03Tests
+        Exercise04Tests
     build-depends:
         base ^>=4.16.4.0,
         HUnit ^>=1.6,

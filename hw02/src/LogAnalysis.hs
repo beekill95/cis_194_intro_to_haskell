@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -Wall #-}
 
-module LogAnalysis (parseMessage, parse, insert, build) where
+module LogAnalysis (parseMessage, parse, insert, build, inOrder) where
 
 import Log
 import Text.Read (readMaybe)
@@ -68,3 +68,9 @@ build :: [LogMessage] -> MessageTree
 build = foldl insertFlip Leaf
   where
     insertFlip = flip insert
+
+-- Exercise 4.
+-- Implement `inOrder()` to travese the tree in-order.
+inOrder :: MessageTree -> [LogMessage]
+inOrder Leaf = []
+inOrder (Node leftSubtree node rightSubtree) = inOrder leftSubtree ++ [node] ++ inOrder rightSubtree

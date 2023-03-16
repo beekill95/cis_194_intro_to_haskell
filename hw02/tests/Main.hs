@@ -3,6 +3,7 @@ module Main where
 import Exercise01Tests
 import Exercise02Tests
 import Exercise03Tests
+import Exercise04Tests
 import System.Exit
 import Test.HUnit
 
@@ -11,7 +12,8 @@ tests =
   TestList
     [ TestLabel "Exercise 1 Tests" exercise01Tests,
       TestLabel "Exercise 2 Tests" exercise02Tests,
-      TestLabel "Exercise 3 Tests" exercise03Tests
+      TestLabel "Exercise 3 Tests" exercise03Tests,
+      TestLabel "Exercise 4 Tests" exercise04Tests
     ]
 
 main :: IO ()
