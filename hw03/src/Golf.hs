@@ -1,4 +1,8 @@
-module Golf (someFunc) where
+module Golf (skips) where
 
-someFunc :: IO ()
-someFunc = putStrLn "someFunc"
+-- Exercise 1 Hopscotch
+skips :: [a] -> [[a]]
+skips [] = []
+skips (head : rest) = (head : rest) : skips rest
+  where
+    enumerate = zip [1 ..]
