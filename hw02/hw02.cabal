@@ -46,6 +46,7 @@ test-suite hw02-tests
     main-is: Main.hs
     other-modules:
         Exercise01Tests
+        Exercise02Tests
     build-depends:
         base ^>=4.16.4.0,
         HUnit ^>=1.6,

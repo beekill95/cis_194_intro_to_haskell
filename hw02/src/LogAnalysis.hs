@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -Wall #-}
 
-module LogAnalysis (parseMessage, parse) where
+module LogAnalysis (parseMessage, parse, insert) where
 
 import Log
 import Text.Read (readMaybe)
@@ -43,3 +43,20 @@ constructLogMessage messageType (first : rest) = case timestamp of
 -- Define a function `parse` to parse an entire log file.
 parse :: String -> [LogMessage]
 parse messages = map parseMessage (lines messages)
+
+-- Exercise 2
+-- Implement `insert()` function which insert a LogMessage
+-- into binary tree in a way such that the LogMessage's timestamp
+-- will always be larger than all the messages in the left subtree
+-- and always be smaller than all the messages in the right subtree.
+-- Note: Unknown and LogMessage without timestamp
+-- should not modify the tree structure.
+insert :: LogMessage -> MessageTree -> MessageTree
+insert (Unknown _) tree = tree
+insert (LogMessage _ (-1) _) tree = tree
+insert _ tree@(Node _ (Unknown _) _) = tree
+insert m@(LogMessage {}) Leaf = Node Leaf m Leaf
+insert newMessage@(LogMessage _ newTime _) (Node leftSubtree oldMessage@(LogMessage _ oldTime _) rightSubtree) =
+  if oldTime >= newTime
+    then Node (insert newMessage leftSubtree) oldMessage rightSubtree
+    else Node leftSubtree oldMessage (insert newMessage rightSubtree)
