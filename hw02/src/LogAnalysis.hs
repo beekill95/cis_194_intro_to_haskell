@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -Wall #-}
 
-module LogAnalysis (parseMessage, parse, insert, build, inOrder) where
+module LogAnalysis (parseMessage, parse, insert, build, inOrder, whatWentWrong) where
 
 import Log
 import Text.Read (readMaybe)
@@ -74,3 +74,24 @@ build = foldl insertFlip Leaf
 inOrder :: MessageTree -> [LogMessage]
 inOrder Leaf = []
 inOrder (Node leftSubtree node rightSubtree) = inOrder leftSubtree ++ [node] ++ inOrder rightSubtree
+
+-- Exercise 5.
+-- Implement `whatWentWrong()` which takes an unsorted list of LogMessages,
+-- and return a list of the messages corresponding to any errors with severity of 50 or greater,
+-- sorted by timestamp.
+whatWentWrong :: [LogMessage] -> [String]
+whatWentWrong = map getMessage . inOrder . build . filterInSevereMessages
+
+-- Get the message inside message log.
+getMessage :: LogMessage -> String
+getMessage (Unknown m) = m
+getMessage (LogMessage _ _ m) = m
+
+-- Filter out all messages that are not severe.
+filterInSevereMessages :: [LogMessage] -> [LogMessage]
+filterInSevereMessages = filter isSevereMessage
+
+-- Check if the message is severe.
+isSevereMessage :: LogMessage -> Bool
+isSevereMessage (LogMessage (Error severity) _ _) = severity >= 50
+isSevereMessage _ = False
