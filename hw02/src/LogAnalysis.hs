@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -Wall #-}
 
-module LogAnalysis (parseMessage, parse, insert) where
+module LogAnalysis (parseMessage, parse, insert, build) where
 
 import Log
 import Text.Read (readMaybe)
