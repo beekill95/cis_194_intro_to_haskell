@@ -3,6 +3,8 @@
 
 module Golf (skips, localMaxima, histogram) where
 
+import Data.Char
+
 -- Exercise 1 Hopscotch
 skips :: [a] -> [[a]]
 skips elements = map (uncurry takeEvery) elementsWithHopLength
@@ -43,7 +45,7 @@ makeTriplets (first : second : third : rest) =
 
 -- Exercise 3 Histogram
 histogram :: [Integer] -> String
-histogram elements = showBins binsCounted
+histogram elements = showBins binsCounted $ largestCount binsCounted
   where
     bins = map (,0 :: Integer) ([1 .. 9] :: [Integer])
     binsCounted = foldr increment bins elements
@@ -61,6 +63,12 @@ largestCount :: [Bin] -> Integer
 largestCount [] = 0
 largestCount ((_, count) : rest) = max count $ largestCount rest
 
-showBins :: [Bin] -> String
-showBins [] = ""
-showBins ((bin, count) : rest) = ""
+showBins :: [Bin] -> Integer -> String
+showBins bins 0 =
+  map (const '=') bins
+    ++ "\n"
+    ++ map (\(b, _) -> intToDigit $ fromIntegral b) bins
+showBins bins level =
+  map (\(_, count) -> if count >= level then '*' else ' ') bins
+    ++ "\n"
+    ++ showBins bins (level - 1)
