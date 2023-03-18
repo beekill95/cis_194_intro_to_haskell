@@ -1,4 +1,5 @@
 {-# OPTIONS_GHC -Wall #-}
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
 module Hw04 where
 
@@ -33,3 +34,29 @@ fun2 = sum . keepEven . takeWhileNot1 . iterate calculate
 
     takeWhileNot1 :: [Integer] -> [Integer]
     takeWhileNot1 = takeWhile (/= 1)
+
+-- Exercise 2: Folding with trees.
+data Tree a
+  = Leaf
+  | Node Integer (Tree a) a (Tree a)
+  deriving (Show, Eq)
+
+-- Implement an insert function that generate a balanced binary tree.
+-- TODO
+foldTree :: [a] -> Tree a
+foldTree _ = Leaf
+
+-- Exercise 3: More Folds.
+-- Implement xor function,
+-- which equates to true only if there are an odd number of True values,
+-- and does not matter how many False there are.
+-- Must use fold.
+xor :: [Bool] -> Bool
+xor = odd . foldr incrementWhenTrue 0
+  where
+    incrementWhenTrue :: Bool -> Integer -> Integer
+    incrementWhenTrue flag = if flag then (+) 1 else id
+
+-- Implement `map` function as `foldr`.
+map' :: (a -> b) -> [a] -> [b]
+map' f = foldr (\x y -> f x : y) []
