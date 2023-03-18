@@ -1,6 +1,7 @@
+{-# LANGUAGE TupleSections #-}
 {-# OPTIONS_GHC -Wall #-}
 
-module Golf (skips, localMaxima) where
+module Golf (skips, localMaxima, histogram) where
 
 -- Exercise 1 Hopscotch
 skips :: [a] -> [[a]]
@@ -39,3 +40,27 @@ makeTriplets (first : second : third : rest) =
     third
   )
     : makeTriplets (second : third : rest)
+
+-- Exercise 3 Histogram
+histogram :: [Integer] -> String
+histogram elements = showBins binsCounted
+  where
+    bins = map (,0 :: Integer) ([1 .. 9] :: [Integer])
+    binsCounted = foldr increment bins elements
+
+type Bin = (Integer, Integer)
+
+increment :: Integer -> [Bin] -> [Bin]
+increment _ [] = []
+increment x ((binKey, binCount) : rest) =
+  if x == binKey
+    then (binKey, binCount + 1) : rest
+    else (binKey, binCount) : increment x rest
+
+largestCount :: [Bin] -> Integer
+largestCount [] = 0
+largestCount ((_, count) : rest) = max count $ largestCount rest
+
+showBins :: [Bin] -> String
+showBins [] = ""
+showBins ((bin, count) : rest) = ""
