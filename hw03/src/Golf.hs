@@ -47,7 +47,7 @@ makeTriplets (first : second : third : rest) =
 histogram :: [Integer] -> String
 histogram elements = showBins binsCounted $ largestCount binsCounted
   where
-    bins = map (,0 :: Integer) ([1 .. 9] :: [Integer])
+    bins = map (,0 :: Integer) ([0 .. 9] :: [Integer])
     binsCounted = foldr increment bins elements
 
 type Bin = (Integer, Integer)
