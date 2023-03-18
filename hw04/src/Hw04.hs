@@ -60,3 +60,12 @@ xor = odd . foldr incrementWhenTrue 0
 -- Implement `map` function as `foldr`.
 map' :: (a -> b) -> [a] -> [b]
 map' f = foldr (\x y -> f x : y) []
+
+-- Exercise 4: Finding primes.
+-- Finding all odd prime numbers up to 2n + 2 using function composition.
+-- https://en.wikipedia.org/wiki/Sieve_of_Sundaram
+sieveSundaram :: Integer -> [Integer]
+sieveSundaram _ = []
+
+cartesianProduct :: [a] -> [b] -> [(a, b)]
+cartesianProduct xs ys = [(x, y) | x <- xs, y <- ys]
