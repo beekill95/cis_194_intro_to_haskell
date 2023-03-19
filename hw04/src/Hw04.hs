@@ -66,7 +66,9 @@ map' f = foldr (\x y -> f x : y) []
 -- Finding all odd prime numbers up to 2n + 2 using function composition.
 -- https://en.wikipedia.org/wiki/Sieve_of_Sundaram
 sieveSundaram :: Integer -> [Integer]
-sieveSundaram n = map ((+ 1) . (2 *)) $ filter (`notElem` excludedNumbers) [3 .. n]
+sieveSundaram n
+  | n == 0 = []
+  | otherwise = map ((+ 1) . (2 *)) $ filter (`notElem` excludedNumbers) [1 .. n]
   where
     excludedNumbers = sundaramExcludedNumbers n
 
