@@ -42,10 +42,21 @@ data Tree a
   | Node Integer (Tree a) a (Tree a)
   deriving (Show, Eq)
 
--- Implement an insert function that generate a balanced binary tree.
+-- Implement an insert function that generate a balanced binary tree,
+-- in other words, an AVL tree.
 -- TODO
-foldTree :: [a] -> Tree a
-foldTree _ = Leaf
+foldTree :: (Ord a) => [a] -> Tree a
+foldTree = foldr unbalancedInsert Leaf
+
+-- FIXME: height increment is incorrect.
+unbalancedInsert :: (Ord a) => a -> Tree a -> Tree a
+unbalancedInsert x Leaf = Node 0 Leaf x Leaf
+unbalancedInsert x (Node height leftSubtree nodeValue rightSubtree)
+  | x <= nodeValue = Node (height + 1) (unbalancedInsert x leftSubtree) nodeValue rightSubtree
+  | otherwise = Node (height + 1) leftSubtree nodeValue (unbalancedInsert x rightSubtree)
+
+balancedInsert :: (Ord a) => a -> Tree a -> Tree a
+balancedInsert _ _ = Leaf
 
 -- Exercise 3: More Folds.
 -- Implement xor function,
