@@ -1,3 +1,4 @@
+{-# LANGUAGE TupleSections #-}
 {-# OPTIONS_GHC -Wall #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
@@ -65,7 +66,20 @@ map' f = foldr (\x y -> f x : y) []
 -- Finding all odd prime numbers up to 2n + 2 using function composition.
 -- https://en.wikipedia.org/wiki/Sieve_of_Sundaram
 sieveSundaram :: Integer -> [Integer]
-sieveSundaram _ = []
+sieveSundaram n = map ((+ 1) . (2 *)) $ filter (`notElem` excludedNumbers) [3 .. n]
+  where
+    excludedNumbers = sundaramExcludedNumbers n
 
-cartesianProduct :: [a] -> [b] -> [(a, b)]
-cartesianProduct xs ys = [(x, y) | x <- xs, y <- ys]
+sundaramExcludedNumbers :: Integer -> [Integer]
+sundaramExcludedNumbers n = map (uncurry excludedNumber) ij
+  where
+    k = (n - 2) `div` 2
+
+    excludedNumber :: Integer -> Integer -> Integer
+    excludedNumber i j = i + j + 2 * i * j
+
+    ij :: [(Integer, Integer)]
+    ij = concatMap validIJs [1 .. k]
+
+    validIJs :: Integer -> [(Integer, Integer)]
+    validIJs i = map (i,) (takeWhile ((<= n) . excludedNumber i) [i ..])
