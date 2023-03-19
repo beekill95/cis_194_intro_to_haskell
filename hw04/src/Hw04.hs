@@ -44,19 +44,74 @@ data Tree a
 
 -- Implement an insert function that generate a balanced binary tree,
 -- in other words, an AVL tree.
--- TODO
 foldTree :: (Ord a) => [a] -> Tree a
-foldTree = foldr unbalancedInsert Leaf
-
--- FIXME: height increment is incorrect.
-unbalancedInsert :: (Ord a) => a -> Tree a -> Tree a
-unbalancedInsert x Leaf = Node 0 Leaf x Leaf
-unbalancedInsert x (Node height leftSubtree nodeValue rightSubtree)
-  | x <= nodeValue = Node (height + 1) (unbalancedInsert x leftSubtree) nodeValue rightSubtree
-  | otherwise = Node (height + 1) leftSubtree nodeValue (unbalancedInsert x rightSubtree)
+foldTree = foldr balancedInsert Leaf
 
 balancedInsert :: (Ord a) => a -> Tree a -> Tree a
-balancedInsert _ _ = Leaf
+balancedInsert x Leaf = Node 0 Leaf x Leaf
+balancedInsert x tree =
+  if isBalancedTree maybeUnbalancedTree
+    then maybeUnbalancedTree
+    else case locations of
+      [] -> Leaf
+      [_] -> Leaf
+      (LeftTree : LeftTree : _) -> rotateRight maybeUnbalancedTree
+      (RightTree : RightTree : _) -> rotateLeft maybeUnbalancedTree
+      (RightTree : LeftTree : _) -> (rotateRight . rotateLeft) maybeUnbalancedTree
+      (LeftTree : RightTree : _) -> (rotateLeft . rotateRight) maybeUnbalancedTree
+  where
+    (maybeUnbalancedTree, locations) = unbalancedInsert x tree
+
+isBalancedTree :: Tree a -> Bool
+isBalancedTree Leaf = True
+isBalancedTree (Node _ Leaf _ Leaf) = True
+isBalancedTree (Node _ (Node rightHeight _ _ _) _ Leaf) = rightHeight == 0
+isBalancedTree (Node _ Leaf _ (Node leftHeight _ _ _)) = leftHeight == 0
+isBalancedTree (Node _ (Node leftHeight _ _ _) _ (Node rightHeight _ _ _)) =
+  abs (leftHeight - rightHeight) < 2
+
+-- Unbalanced insertion with the inserted locations.
+unbalancedInsert :: (Ord a) => a -> Tree a -> (Tree a, [InsertLocation])
+unbalancedInsert x Leaf = (Node 0 Leaf x Leaf, [])
+unbalancedInsert x (Node _ leftSubtree nodeValue rightSubtree)
+  | x <= nodeValue =
+      let (newLeftTree, locations) = unbalancedInsert x leftSubtree
+          nodeHeight = 1 + highestSubtreesHeight newLeftTree rightSubtree
+       in (Node nodeHeight newLeftTree nodeValue rightSubtree, LeftTree : locations)
+  | otherwise =
+      let (newRightTree, locations) = unbalancedInsert x rightSubtree
+          nodeHeight = 1 + highestSubtreesHeight leftSubtree newRightTree
+       in (Node nodeHeight leftSubtree nodeValue newRightTree, RightTree : locations)
+
+-- Data type for indicating where the node was inserted into the tree.
+data InsertLocation = LeftTree | RightTree
+
+highestSubtreesHeight :: Tree a -> Tree a -> Integer
+highestSubtreesHeight Leaf Leaf = -1
+highestSubtreesHeight (Node height _ _ _) Leaf = height
+highestSubtreesHeight Leaf (Node height _ _ _) = height
+highestSubtreesHeight (Node leftHeight _ _ _) (Node rightHeight _ _ _) = max leftHeight rightHeight
+
+-- Rotate trees.
+rotateLeft :: Tree a -> Tree a
+rotateLeft Leaf = Leaf
+rotateLeft t@(Node _ _ _ Leaf) = t
+rotateLeft (Node _ pLeftTree pNode (Node _ cLeftTree cNode cRightTree)) =
+  Node newHeightOfTree newLeftTree cNode cRightTree
+  where
+    newHeightOfLeftTree = 1 + highestSubtreesHeight pLeftTree cLeftTree
+    newLeftTree = Node newHeightOfLeftTree pLeftTree pNode cLeftTree
+    newHeightOfTree = 1 + highestSubtreesHeight newLeftTree cRightTree
+
+rotateRight :: Tree a -> Tree a
+rotateRight Leaf = Leaf
+rotateRight t@(Node _ Leaf _ _) = t
+rotateRight (Node _ (Node _ cLeftTree cNode cRightTree) pNode pRightTree) =
+  Node newTreeHeight cLeftTree cNode newRightTree
+  where
+    newHeightOfRightTree = 1 + highestSubtreesHeight cRightTree pRightTree
+    newRightTree = Node newHeightOfRightTree cRightTree pNode pRightTree
+    newTreeHeight = 1 + highestSubtreesHeight cLeftTree newRightTree
 
 -- Exercise 3: More Folds.
 -- Implement xor function,
