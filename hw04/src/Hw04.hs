@@ -49,18 +49,31 @@ foldTree = foldr balancedInsert Leaf
 
 balancedInsert :: (Ord a) => a -> Tree a -> Tree a
 balancedInsert x Leaf = Node 0 Leaf x Leaf
-balancedInsert x tree =
-  if isBalancedTree maybeUnbalancedTree
-    then maybeUnbalancedTree
-    else case locations of
-      [] -> Leaf
-      [_] -> Leaf
-      (LeftTree : LeftTree : _) -> rotateRight maybeUnbalancedTree
-      (RightTree : RightTree : _) -> rotateLeft maybeUnbalancedTree
-      (RightTree : LeftTree : _) -> (rotateRight . rotateLeft) maybeUnbalancedTree
-      (LeftTree : RightTree : _) -> (rotateLeft . rotateRight) maybeUnbalancedTree
+balancedInsert new tree = fst $ insert new tree
   where
-    (maybeUnbalancedTree, locations) = unbalancedInsert x tree
+    insert :: (Ord a) => a -> Tree a -> (Tree a, [InsertLocation])
+    insert x Leaf = (Node 0 Leaf x Leaf, [])
+    insert x (Node _ leftSubtree nodeValue rightSubtree)
+      | x <= nodeValue =
+          let (newLeftTree, locations) = insert x leftSubtree
+              newBalancedLeftTree = balanceTree newLeftTree locations
+           in (newBalancedLeftTree, LeftTree : locations)
+      | otherwise =
+          let (newRightTree, locations) = insert x rightSubtree
+              newBalancedRightTree = balanceTree newRightTree locations
+           in (newBalancedRightTree, RightTree : locations)
+
+    balanceTree :: Tree a -> [InsertLocation] -> Tree a
+    balanceTree maybeUnbalancedTree locations =
+      if isBalancedTree maybeUnbalancedTree
+        then maybeUnbalancedTree
+        else case locations of
+          [] -> Leaf
+          [_] -> Leaf
+          (LeftTree : LeftTree : _) -> rotateRight maybeUnbalancedTree
+          (RightTree : RightTree : _) -> rotateLeft maybeUnbalancedTree
+          (RightTree : LeftTree : _) -> (rotateRight . rotateLeft) maybeUnbalancedTree
+          (LeftTree : RightTree : _) -> (rotateLeft . rotateRight) maybeUnbalancedTree
 
 isBalancedTree :: Tree a -> Bool
 isBalancedTree Leaf = True
@@ -70,18 +83,18 @@ isBalancedTree (Node _ Leaf _ (Node leftHeight _ _ _)) = leftHeight == 0
 isBalancedTree (Node _ (Node leftHeight _ _ _) _ (Node rightHeight _ _ _)) =
   abs (leftHeight - rightHeight) < 2
 
--- Unbalanced insertion with the inserted locations.
-unbalancedInsert :: (Ord a) => a -> Tree a -> (Tree a, [InsertLocation])
-unbalancedInsert x Leaf = (Node 0 Leaf x Leaf, [])
-unbalancedInsert x (Node _ leftSubtree nodeValue rightSubtree)
-  | x <= nodeValue =
-      let (newLeftTree, locations) = unbalancedInsert x leftSubtree
-          nodeHeight = 1 + highestSubtreesHeight newLeftTree rightSubtree
-       in (Node nodeHeight newLeftTree nodeValue rightSubtree, LeftTree : locations)
-  | otherwise =
-      let (newRightTree, locations) = unbalancedInsert x rightSubtree
-          nodeHeight = 1 + highestSubtreesHeight leftSubtree newRightTree
-       in (Node nodeHeight leftSubtree nodeValue newRightTree, RightTree : locations)
+-- For reference: Unbalanced insertion with the inserted locations.
+-- unbalancedInsert :: (Ord a) => a -> Tree a -> (Tree a, [InsertLocation])
+-- unbalancedInsert x Leaf = (Node 0 Leaf x Leaf, [])
+-- unbalancedInsert x (Node _ leftSubtree nodeValue rightSubtree)
+--   | x <= nodeValue =
+--       let (newLeftTree, locations) = unbalancedInsert x leftSubtree
+--           nodeHeight = 1 + highestSubtreesHeight newLeftTree rightSubtree
+--        in (Node nodeHeight newLeftTree nodeValue rightSubtree, LeftTree : locations)
+--   | otherwise =
+--       let (newRightTree, locations) = unbalancedInsert x rightSubtree
+--           nodeHeight = 1 + highestSubtreesHeight leftSubtree newRightTree
+--        in (Node nodeHeight leftSubtree nodeValue newRightTree, RightTree : locations)
 
 -- Data type for indicating where the node was inserted into the tree.
 data InsertLocation = LeftTree | RightTree
