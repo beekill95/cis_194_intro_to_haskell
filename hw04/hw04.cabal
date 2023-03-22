@@ -40,6 +40,7 @@ test-suite hw04-tests
     main-is: Main.hs
     other-modules:
         Exercise01Tests
+        Exercise02Tests
         Exercise03Tests
         Exercise04Tests
     build-depends:

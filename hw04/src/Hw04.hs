@@ -57,11 +57,13 @@ balancedInsert new tree = fst $ insert new tree
       | x <= nodeValue =
           let (newLeftTree, locations) = insert x leftSubtree
               newBalancedLeftTree = balanceTree newLeftTree locations
-           in (newBalancedLeftTree, LeftTree : locations)
+              newHeight = 1 + highestSubtreesHeight newBalancedLeftTree rightSubtree
+           in (Node newHeight newBalancedLeftTree nodeValue rightSubtree, LeftTree : locations)
       | otherwise =
           let (newRightTree, locations) = insert x rightSubtree
               newBalancedRightTree = balanceTree newRightTree locations
-           in (newBalancedRightTree, RightTree : locations)
+              newHeight = 1 + highestSubtreesHeight leftSubtree newBalancedRightTree
+           in (Node newHeight leftSubtree nodeValue newBalancedRightTree, RightTree : locations)
 
     balanceTree :: Tree a -> [InsertLocation] -> Tree a
     balanceTree maybeUnbalancedTree locations =
@@ -78,8 +80,8 @@ balancedInsert new tree = fst $ insert new tree
 isBalancedTree :: Tree a -> Bool
 isBalancedTree Leaf = True
 isBalancedTree (Node _ Leaf _ Leaf) = True
-isBalancedTree (Node _ (Node rightHeight _ _ _) _ Leaf) = rightHeight == 0
-isBalancedTree (Node _ Leaf _ (Node leftHeight _ _ _)) = leftHeight == 0
+isBalancedTree (Node _ (Node leftHeight _ _ _) _ Leaf) = leftHeight == 0
+isBalancedTree (Node _ Leaf _ (Node rightHeight _ _ _)) = rightHeight == 0
 isBalancedTree (Node _ (Node leftHeight _ _ _) _ (Node rightHeight _ _ _)) =
   abs (leftHeight - rightHeight) < 2
 
