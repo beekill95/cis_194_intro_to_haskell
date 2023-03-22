@@ -23,7 +23,7 @@ extra-source-files: CHANGELOG.md
 
 library
     exposed-modules:
-        MyLib,
+        Calc,
         ExprT,
         Parser,
         StackVM
