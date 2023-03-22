@@ -44,14 +44,14 @@ data Tree a
 
 -- Implement an insert function that generate a balanced binary tree,
 -- in other words, an AVL tree.
-foldTree :: (Ord a) => [a] -> Tree a
+foldTree :: Ord a => [a] -> Tree a
 foldTree = foldr balancedInsert Leaf
 
-balancedInsert :: (Ord a) => a -> Tree a -> Tree a
+balancedInsert :: Ord a => a -> Tree a -> Tree a
 balancedInsert x Leaf = Node 0 Leaf x Leaf
-balancedInsert new tree = fst $ insert new tree
+balancedInsert new tree = uncurry balanceTree $ insert new tree
   where
-    insert :: (Ord a) => a -> Tree a -> (Tree a, [InsertLocation])
+    insert :: Ord a => a -> Tree a -> (Tree a, [InsertLocation])
     insert x Leaf = (Node 0 Leaf x Leaf, [])
     insert x (Node _ leftSubtree nodeValue rightSubtree)
       | x <= nodeValue =
