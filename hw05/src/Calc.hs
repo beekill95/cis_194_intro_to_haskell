@@ -29,11 +29,16 @@ instance Expr ExprT where
 reify :: ExprT -> ExprT
 reify = id
 
--- Exercise 4: Make Bool, MinMax, and Mod7 as instances of Expr.
+-- Exercise 4: Make Integer, Bool, MinMax, and Mod7 as instances of Expr.
+instance Expr Integer where
+  lit n = n
+  add = (+)
+  mul = (*)
+
 instance Expr Bool where
   lit n
-    | n <= 0 = True
-    | otherwise = False
+    | n <= 0 = False
+    | otherwise = True
 
   add = (||)
   mul = (&&)
@@ -48,6 +53,6 @@ instance Expr MinMax where
 newtype Mod7 = Mod7 Integer deriving (Eq, Show)
 
 instance Expr Mod7 where
-  lit = Mod7
+  lit = Mod7 . (`mod` 7)
   add (Mod7 lhs) (Mod7 rhs) = lit $ (lhs + rhs) `mod` 7
   mul (Mod7 lhs) (Mod7 rhs) = lit $ (lhs * rhs) `mod` 7
