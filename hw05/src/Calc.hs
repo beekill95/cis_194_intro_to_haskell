@@ -4,7 +4,7 @@ module Calc where
 
 import ExprT
 import Parser
-import qualified StackVM
+import qualified StackVM as S
 
 -- Exercise 1: First version of the calculator.
 eval :: ExprT -> Integer
@@ -61,7 +61,10 @@ instance Expr Mod7 where
   mul (Mod7 lhs) (Mod7 rhs) = lit $ (lhs * rhs) `mod` 7
 
 -- Exercise 5: CPU instructions generation.
-instance Expr StackVM.Program where
-  lit n = [StackVM.PushI n]
-  add lhs rhs = lhs ++ rhs ++ [StackVM.Add]
-  mul lhs rhs = lhs ++ rhs ++ [StackVM.Mul]
+instance Expr S.Program where
+  lit n = [S.PushI n]
+  add lhs rhs = lhs ++ rhs ++ [S.Add]
+  mul lhs rhs = lhs ++ rhs ++ [S.Mul]
+
+compile :: String -> Maybe S.Program
+compile = parseExp lit add mul

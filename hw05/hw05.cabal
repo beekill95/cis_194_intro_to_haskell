@@ -61,7 +61,8 @@ test-suite hw05-tests
         Exercise01,
         Exercise02,
         Exercise03,
-        Exercise04
+        Exercise04,
+        Exercise05
     build-depends:
         base ^>=4.16.4.0,
         HUnit ^>=1.6,
