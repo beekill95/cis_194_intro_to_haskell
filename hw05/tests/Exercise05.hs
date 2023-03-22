@@ -46,7 +46,7 @@ exercise05Tests =
       TestLabel "test with invalid expression" $
         TestCase $
           assertEqual
-            "should return correct instructions order"
+            "should return invalid program"
             Nothing
             (compile "5 + 3 + 5 *")
     ]
