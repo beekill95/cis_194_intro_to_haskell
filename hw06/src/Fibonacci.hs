@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleInstances #-}
 {-# OPTIONS_GHC -Wno-missing-methods #-}
 
 module Fibonacci where
@@ -56,6 +57,22 @@ nats = Stream [0 ..]
 -- TODO
 ruler :: Stream Integer
 ruler = Stream []
+
+-- Exercise 6: Fibonacci via stream.
+x :: Stream Integer
+x = Stream $ 0 : 1 : [0, 0 ..]
+
+instance Num (Stream Integer) where
+  fromInteger n = Stream $ n : [0, 0 ..]
+  negate = streamMap negate
+  (+) (Stream lhs) (Stream rhs) = Stream $ zipWith (+) lhs rhs
+
+  -- TODO
+  (*) (Stream lhs) (Stream rhs) = Stream []
+
+instance Fractional (Stream Integer) where
+  -- TODO
+  (/) (Stream lhs) (Stream rhs) = Stream []
 
 -- Exercise 7: Fibonacci via matrix multiplication.
 data Matrix = Matrix (Integer, Integer) (Integer, Integer)
