@@ -25,3 +25,14 @@ fibs2Failed n = foldl fibArray [] [0 .. n]
 -- TODO
 fibs2 :: [Integer]
 fibs2 = []
+  where
+    n = 0
+
+-- Exercise 3: Stream.
+newtype Stream a = Stream a
+
+streamToList :: Stream a -> [a]
+streamToList (Stream x) = repeat x
+
+instance Show a => Show (Stream a) where
+  show = show . take 20 . streamToList
