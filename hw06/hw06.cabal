@@ -54,7 +54,8 @@ test-suite hw06-tests
     hs-source-dirs: tests
     main-is: Main.hs
     other-modules:
-        Exercise01
+        Exercise01,
+        Exercise02
     build-depends:
         base ^>=4.16.4.0,
         HUnit ^>=1.6,
