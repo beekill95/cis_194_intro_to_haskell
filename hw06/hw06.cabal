@@ -47,3 +47,15 @@ executable hw06
 
     hs-source-dirs:   app
     default-language: Haskell2010
+
+test-suite hw06-tests
+    default-language: Haskell2010
+    type: exitcode-stdio-1.0
+    hs-source-dirs: tests
+    main-is: Main.hs
+    other-modules:
+        Exercise01
+    build-depends:
+        base ^>=4.16.4.0,
+        HUnit ^>=1.6,
+        hw06
