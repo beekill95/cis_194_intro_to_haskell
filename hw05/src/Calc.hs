@@ -2,6 +2,8 @@
 
 module Calc where
 
+import Control.Applicative
+import qualified Data.Map as M
 import ExprT
 import Parser
 import qualified StackVM as S
@@ -68,3 +70,40 @@ instance Expr S.Program where
 
 compile :: String -> Maybe S.Program
 compile = parseExp lit add mul
+
+-- Exercise 6: Storing intermediate results in variables.
+class HasVars a where
+  var :: String -> a
+
+data VarExprT
+  = VLit Integer
+  | VAdd VarExprT VarExprT
+  | VMul VarExprT VarExprT
+  | VVar String
+  deriving (Show, Eq)
+
+instance Expr VarExprT where
+  lit = VLit
+  add = VAdd
+  mul = VMul
+
+instance HasVars VarExprT where
+  var = VVar
+
+instance HasVars (M.Map String Integer -> Maybe Integer) where
+  var = M.lookup
+
+instance Expr (M.Map String Integer -> Maybe Integer) where
+  lit n = const $ Just n
+
+  -- First, + operator is apply (via <$>) to the lhs Maybe Integer
+  -- to yield a Maybe function that is waiting to receive another argument.
+  -- Next, <*> is used to apply the rhs Maybe Integer to the Maybe function.
+  add lhs rhs vars = (+) <$> lhs vars <*> rhs vars
+  mul lhs rhs vars = (*) <$> lhs vars <*> rhs vars
+
+withVars ::
+  [(String, Integer)] ->
+  (M.Map String Integer -> Maybe Integer) ->
+  Maybe Integer
+withVars vars expr = expr $ M.fromList vars

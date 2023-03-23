@@ -5,6 +5,7 @@ import Exercise02
 import Exercise03
 import Exercise04
 import Exercise05
+import Exercise06
 import System.Exit
 import Test.HUnit
 
@@ -15,7 +16,8 @@ tests =
       TestLabel "Exercise 2 Tests" exercise02Tests,
       TestLabel "Exercise 3 Tests" exercise03Tests,
       TestLabel "Exercise 4 Tests" exercise04Tests,
-      TestLabel "Exercise 5 Tests" exercise05Tests
+      TestLabel "Exercise 5 Tests" exercise05Tests,
+      TestLabel "Exercise 6 Tests" exercise06Tests
     ]
 
 main :: IO ()
