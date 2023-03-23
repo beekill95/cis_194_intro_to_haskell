@@ -1,3 +1,5 @@
+{-# OPTIONS_GHC -Wno-missing-methods #-}
+
 module Fibonacci where
 
 import Data.Foldable
@@ -51,5 +53,22 @@ streamFromSeed f x = Stream $ f `iterate` x
 nats :: Stream Integer
 nats = Stream [0 ..]
 
+-- TODO
 ruler :: Stream Integer
 ruler = Stream []
+
+-- Exercise 7: Fibonacci via matrix multiplication.
+data Matrix = Matrix (Integer, Integer) (Integer, Integer)
+
+instance Num Matrix where
+  (*) (Matrix (a, b) (c, d)) (Matrix (x, y) (z, k)) =
+    Matrix (a * x + b * y, a * y + b * k) (c * x + d * z, c * y + d * k)
+
+fiboMatrix :: Integer -> Matrix
+fiboMatrix 1 = Matrix (1, 1) (1, 0)
+fiboMatrix n = fiboMatrix 1 ^ n
+
+fib4 :: Integer -> Integer
+fib4 n = x
+  where
+    (Matrix (_, x) (_, _)) = fiboMatrix n

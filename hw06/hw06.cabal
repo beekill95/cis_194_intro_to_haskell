@@ -56,7 +56,8 @@ test-suite hw06-tests
     other-modules:
         Exercise01,
         Exercise02,
-        Exercise03
+        Exercise03,
+        Exercise07
     build-depends:
         base ^>=4.16.4.0,
         HUnit ^>=1.6,
