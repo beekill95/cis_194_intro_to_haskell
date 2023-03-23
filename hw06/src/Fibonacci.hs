@@ -36,3 +36,20 @@ streamToList (Stream x) = x
 
 instance Show a => Show (Stream a) where
   show = show . take 20 . streamToList
+
+-- Exercise 4: Utilities to work with Stream.
+streamRepeat :: a -> Stream a
+streamRepeat = Stream . repeat
+
+streamMap :: (a -> b) -> Stream a -> Stream b
+streamMap f (Stream x) = Stream $ map f x
+
+streamFromSeed :: (a -> a) -> a -> Stream a
+streamFromSeed f x = Stream $ f `iterate` x
+
+-- Exercise 5: Few more tools with stream.
+nats :: Stream Integer
+nats = Stream [0 ..]
+
+ruler :: Stream Integer
+ruler = Stream []
