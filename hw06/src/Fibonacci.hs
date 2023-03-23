@@ -29,10 +29,10 @@ fibs2 = []
     n = 0
 
 -- Exercise 3: Stream.
-newtype Stream a = Stream a
+newtype Stream a = Stream [a]
 
 streamToList :: Stream a -> [a]
-streamToList (Stream x) = repeat x
+streamToList (Stream x) = x
 
 instance Show a => Show (Stream a) where
   show = show . take 20 . streamToList

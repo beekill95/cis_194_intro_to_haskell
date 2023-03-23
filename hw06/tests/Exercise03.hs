@@ -9,13 +9,13 @@ exercise03Tests =
     [ TestLabel "take 3 elements" $
         TestCase $
           assertEqual
-            "should return 3 repeated elements"
-            [3, 3, 3]
-            (take 3 $ streamToList $ Stream 3),
+            "should return 3 elements"
+            [3, 4, 5]
+            (take 3 $ streamToList $ Stream [3 ..]),
       TestLabel "take 10 elements" $
         TestCase $
           assertEqual
             "should return 10 repeated elements"
-            [3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
-            (take 10 $ streamToList $ Stream 3)
+            [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+            (take 10 $ streamToList $ Stream [3 ..])
     ]
