@@ -2,6 +2,7 @@
 
 module JoinList where
 
+import Scrabble
 import Sized
 
 data JoinList m a
@@ -84,3 +85,8 @@ takeJ n l@(Append s lhs rhs)
           aSInt = sizeToInt aS
   where
     sInt = sizeToInt s
+
+-- Exercise 3: Scrabble score.
+scoreLine :: String -> JoinList Score String
+scoreLine "" = Empty
+scoreLine s = Single (scoreString s) s
