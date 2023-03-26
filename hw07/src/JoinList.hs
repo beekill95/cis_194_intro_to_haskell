@@ -2,6 +2,8 @@
 
 module JoinList where
 
+import Sized
+
 data JoinList m a
   = Empty
   | Single m a
@@ -21,3 +23,22 @@ tag :: Monoid m => JoinList m a -> m
 tag Empty = mempty
 tag (Single m _) = m
 tag (Append m _ _) = m
+
+-- Exercise 2: Annotation for fast indexing into a JoinList.
+indexJ :: (Sized b, Monoid b) => Int -> JoinList b a -> Maybe a
+indexJ _ Empty = Nothing
+indexJ i (Single _ a)
+  | i == 0 = Just a
+  | otherwise = Nothing
+indexJ i (Append _ lhs Empty) = indexJ i lhs
+indexJ i (Append _ Empty rhs) = indexJ i rhs
+indexJ i (Append _ lhs@(Single s _) rhs)
+  | i < sInt = indexJ i lhs
+  | otherwise = indexJ (i - sInt) rhs
+  where
+    sInt = (getSize . size) s
+indexJ i (Append _ lhs@(Append s _ _) rhs)
+  | i < sInt = indexJ i lhs
+  | otherwise = indexJ (i - sInt) rhs
+  where
+    sInt = (getSize . size) s
