@@ -167,10 +167,76 @@ exercise022Tests =
             )
     ]
 
+-- Exercise 2.3 tests.
+exercise023Tests :: Test
+exercise023Tests =
+  TestList
+    [ TestLabel "take elements from empty list" $
+        TestCase $
+          assertEqual
+            "should return empty list"
+            (Empty :: JoinList Size String)
+            (takeJ 5 Empty),
+      TestLabel "take negative number of elements from list" $
+        TestCase $
+          assertEqual
+            "should return empty list"
+            (Empty :: JoinList Size String)
+            (takeJ (-5) (Single (Size 1) "a")),
+      TestLabel "take zero elements from list" $
+        TestCase $
+          assertEqual
+            "should return empty list"
+            (Empty :: JoinList Size String)
+            (takeJ 0 (Single (Size 1) "a")),
+      TestLabel "take a single element from a single list" $
+        TestCase $
+          assertEqual
+            "should return the list unchanged"
+            (Single (Size 1) "a")
+            (takeJ 1 (Single (Size 1) "a")),
+      TestLabel "take two elements from a single list" $
+        TestCase $
+          assertEqual
+            "should return the list unchanged"
+            (Single (Size 1) "a")
+            (takeJ 2 (Single (Size 1) "a")),
+      TestLabel "take single element from an append list" $
+        TestCase $
+          assertEqual
+            "should return only the single list on the left hand side"
+            (Single (Size 1) "a")
+            (takeJ 1 (Append (Size 2) (Single (Size 1) "a") (Single (Size 1) "b"))),
+      TestLabel "take two elements from an append list" $
+        TestCase $
+          assertEqual
+            "should return the list unchanged"
+            (Append (Size 2) (Single (Size 1) "a") (Single (Size 1) "b"))
+            (takeJ 2 (Append (Size 2) (Single (Size 1) "a") (Single (Size 1) "b"))),
+      TestLabel "take two elements from a nested append list" $
+        TestCase $
+          assertEqual
+            "should return an append list with two elements"
+            (Append (Size 2) (Single (Size 1) "a") (Single (Size 1) "b"))
+            ( takeJ
+                2
+                ( Append
+                    (Size 3)
+                    (Single (Size 1) "a")
+                    ( Append
+                        (Size 2)
+                        (Single (Size 1) "b")
+                        (Single (Size 1) "c")
+                    )
+                )
+            )
+    ]
+
 -- Tests.
 exercise02Tests :: Test
 exercise02Tests =
   TestList
     [ TestLabel "exercise 2.1" exercise021Tests,
-      TestLabel "exercise 2.2" exercise022Tests
+      TestLabel "exercise 2.2" exercise022Tests,
+      TestLabel "exercise 2.3" exercise023Tests
     ]

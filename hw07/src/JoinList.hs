@@ -65,3 +65,22 @@ dropJ n (Append s lhs rhs)
           aSInt = sizeToInt aS
   where
     sInt = sizeToInt s
+
+-- Exercise 2.3: Take first n elements from join lists.
+takeJ :: (Sized b, Monoid b) => Int -> JoinList b a -> JoinList b a
+takeJ _ Empty = Empty
+takeJ n _
+  | n <= 0 = Empty
+takeJ _ l@(Single _ _) = l
+takeJ n l@(Append s lhs rhs)
+  | n >= sInt = l
+  | otherwise = case lhs of
+      Empty -> takeJ n rhs
+      (Single sS _) -> takeJ n lhs +++ takeJ (n - sSInt) rhs
+        where
+          sSInt = sizeToInt sS
+      (Append aS _ _) -> takeJ n lhs +++ takeJ (n - aSInt) rhs
+        where
+          aSInt = sizeToInt aS
+  where
+    sInt = sizeToInt s
