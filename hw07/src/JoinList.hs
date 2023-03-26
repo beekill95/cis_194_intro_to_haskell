@@ -24,7 +24,11 @@ tag Empty = mempty
 tag (Single m _) = m
 tag (Append m _ _) = m
 
--- Exercise 2: Annotation for fast indexing into a JoinList.
+-- Exercise 2 Utilities
+sizeToInt :: Sized a => a -> Int
+sizeToInt = getSize . size
+
+-- Exercise 2.1: Annotation for fast indexing into a JoinList.
 indexJ :: (Sized b, Monoid b) => Int -> JoinList b a -> Maybe a
 indexJ _ Empty = Nothing
 indexJ i (Single _ a)
@@ -36,9 +40,28 @@ indexJ i (Append _ lhs@(Single s _) rhs)
   | i < sInt = indexJ i lhs
   | otherwise = indexJ (i - sInt) rhs
   where
-    sInt = (getSize . size) s
+    sInt = sizeToInt s
 indexJ i (Append _ lhs@(Append s _ _) rhs)
   | i < sInt = indexJ i lhs
   | otherwise = indexJ (i - sInt) rhs
   where
-    sInt = (getSize . size) s
+    sInt = sizeToInt s
+
+-- Exercise 2.2: Drop first n elements from joinlists.
+dropJ :: (Sized b, Monoid b) => Int -> JoinList b a -> JoinList b a
+dropJ _ Empty = Empty
+dropJ n l
+  | n <= 0 = l
+dropJ _ (Single _ _) = Empty
+dropJ n (Append s lhs rhs)
+  | n >= sInt = Empty
+  | otherwise = case lhs of
+      Empty -> dropJ n rhs
+      (Single sS _) -> dropJ n lhs +++ dropJ (n - sSInt) rhs
+        where
+          sSInt = sizeToInt sS
+      (Append aS _ _) -> dropJ n lhs +++ dropJ (n - aSInt) rhs
+        where
+          aSInt = sizeToInt aS
+  where
+    sInt = sizeToInt s
