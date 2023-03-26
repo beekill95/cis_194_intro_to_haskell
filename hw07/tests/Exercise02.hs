@@ -19,9 +19,9 @@ import Test.HUnit
 -- indexListFromJoinList :: Int -> JoinList m a -> Maybe a
 -- indexListFromJoinList i = (!!? i) . jlToList
 
--- Tests.
-exercise02Tests :: Test
-exercise02Tests =
+-- Exercise 2.1 tests.
+exercise021Tests :: Test
+exercise021Tests =
   TestList
     [ TestLabel "test index to empty" $
         TestCase $
@@ -107,4 +107,70 @@ exercise02Tests =
                       (Single (Size 1) "c")
                   )
             )
+    ]
+
+-- Exercise 2.2 tests.
+exercise022Tests :: Test
+exercise022Tests =
+  TestList
+    [ TestLabel "drop empty list" $
+        TestCase $
+          assertEqual
+            "should return empty"
+            (Empty :: JoinList Size String)
+            (dropJ 5 Empty),
+      TestLabel "drop a single list" $
+        TestCase $
+          assertEqual
+            "should return empty"
+            Empty
+            (dropJ 5 (Single (Size 1) "a")),
+      TestLabel "drop negative elements from a single list" $
+        TestCase $
+          assertEqual
+            "should return that list unchanged"
+            (Single (Size 1) "a")
+            (dropJ (-5) (Single (Size 1) "a")),
+      TestLabel "drop 1 element from an append list" $
+        TestCase $
+          assertEqual
+            "should return the right-hand branch"
+            ( Append
+                (Size 2)
+                (Single (Size 1) "b")
+                (Single (Size 1) "c")
+            )
+            ( dropJ 1 $
+                Append
+                  (Size 3)
+                  (Single (Size 1) "a")
+                  ( Append
+                      (Size 2)
+                      (Single (Size 1) "b")
+                      (Single (Size 1) "c")
+                  )
+            ),
+      TestLabel "drop 2 elements from an append list" $
+        TestCase $
+          assertEqual
+            "should return the single list"
+            (Single (Size 1) "c")
+            ( dropJ 2 $
+                Append
+                  (Size 3)
+                  (Single (Size 1) "a")
+                  ( Append
+                      (Size 2)
+                      (Single (Size 1) "b")
+                      (Single (Size 1) "c")
+                  )
+            )
+    ]
+
+-- Tests.
+exercise02Tests :: Test
+exercise02Tests =
+  TestList
+    [ TestLabel "exercise 2.1" exercise021Tests,
+      TestLabel "exercise 2.2" exercise022Tests
     ]
