@@ -128,7 +128,175 @@ lineTests =
 
 -- Test `replaceLine`
 replaceLineTests :: Test
-replaceLineTests = TestList []
+replaceLineTests =
+  TestList
+    [ TestLabel "test replace empty list with valid index" $
+        TestCase $
+          assertEqual
+            "should return a single list"
+            (Single (Score 1, Size 1) "A")
+            (replaceLine 0 "A" Empty),
+      TestLabel "test replace empty list with invalid index" $
+        TestCase $
+          assertEqual
+            "should return an empty list"
+            Empty
+            (replaceLine 5 "A" (Empty :: (JoinList (Score, Size) String))),
+      TestLabel "test replace single list with negative index" $
+        TestCase $
+          assertEqual
+            "should return the list unchanged"
+            (Single (Score 1, Size 1) "A")
+            (replaceLine (-5) "Q" (Single (Score 1, Size 1) "A")),
+      TestLabel "test replace single list with valid index" $
+        TestCase $
+          assertEqual
+            "should return the list with score and content changed"
+            (Single (Score 10, Size 1) "Q")
+            (replaceLine 0 "Q" (Single (Score 1, Size 1) "A")),
+      TestLabel "test replace single list with invalid index" $
+        TestCase $
+          assertEqual
+            "should return the list unchanged"
+            (Single (Score 1, Size 1) "A")
+            (replaceLine 5 "Q" (Single (Score 1, Size 1) "A")),
+      TestLabel "test replace an append list with a negative index" $
+        TestCase $
+          assertEqual
+            "should return the list unchanged"
+            ( Append
+                (Score 13, Size 4)
+                ( Append
+                    (Score 11, Size 2)
+                    (Single (Score 10, Size 1) "Q")
+                    (Single (Score 1, Size 1) "u")
+                )
+                ( Append
+                    (Score 2, Size 2)
+                    (Single (Score 1, Size 1) "a")
+                    (Single (Score 1, Size 1) "n")
+                )
+            )
+            ( replaceLine
+                (-1)
+                "C"
+                ( Append
+                    (Score 13, Size 4)
+                    ( Append
+                        (Score 11, Size 2)
+                        (Single (Score 10, Size 1) "Q")
+                        (Single (Score 1, Size 1) "u")
+                    )
+                    ( Append
+                        (Score 2, Size 2)
+                        (Single (Score 1, Size 1) "a")
+                        (Single (Score 1, Size 1) "n")
+                    )
+                )
+            ),
+      TestLabel "test replace an append list with an invalid index" $
+        TestCase $
+          assertEqual
+            "should return the list unchanged"
+            ( Append
+                (Score 13, Size 4)
+                ( Append
+                    (Score 11, Size 2)
+                    (Single (Score 10, Size 1) "Q")
+                    (Single (Score 1, Size 1) "u")
+                )
+                ( Append
+                    (Score 2, Size 2)
+                    (Single (Score 1, Size 1) "a")
+                    (Single (Score 1, Size 1) "n")
+                )
+            )
+            ( replaceLine
+                5
+                "C"
+                ( Append
+                    (Score 13, Size 4)
+                    ( Append
+                        (Score 11, Size 2)
+                        (Single (Score 10, Size 1) "Q")
+                        (Single (Score 1, Size 1) "u")
+                    )
+                    ( Append
+                        (Score 2, Size 2)
+                        (Single (Score 1, Size 1) "a")
+                        (Single (Score 1, Size 1) "n")
+                    )
+                )
+            ),
+      TestLabel "test replace an append list with a valid index on the first half" $
+        TestCase $
+          assertEqual
+            "should return the list with score and content changed"
+            ( Append
+                (Score 15, Size 4)
+                ( Append
+                    (Score 13, Size 2)
+                    (Single (Score 10, Size 1) "Q")
+                    (Single (Score 3, Size 1) "C")
+                )
+                ( Append
+                    (Score 2, Size 2)
+                    (Single (Score 1, Size 1) "a")
+                    (Single (Score 1, Size 1) "n")
+                )
+            )
+            ( replaceLine
+                1
+                "C"
+                ( Append
+                    (Score 13, Size 4)
+                    ( Append
+                        (Score 11, Size 2)
+                        (Single (Score 10, Size 1) "Q")
+                        (Single (Score 1, Size 1) "u")
+                    )
+                    ( Append
+                        (Score 2, Size 2)
+                        (Single (Score 1, Size 1) "a")
+                        (Single (Score 1, Size 1) "n")
+                    )
+                )
+            ),
+      TestLabel "test replace an append list with a valid index on the second half" $
+        TestCase $
+          assertEqual
+            "should return the list with score and content changed"
+            ( Append
+                (Score 15, Size 4)
+                ( Append
+                    (Score 11, Size 2)
+                    (Single (Score 10, Size 1) "Q")
+                    (Single (Score 1, Size 1) "u")
+                )
+                ( Append
+                    (Score 4, Size 2)
+                    (Single (Score 1, Size 1) "a")
+                    (Single (Score 3, Size 1) "C")
+                )
+            )
+            ( replaceLine
+                3
+                "C"
+                ( Append
+                    (Score 13, Size 4)
+                    ( Append
+                        (Score 11, Size 2)
+                        (Single (Score 10, Size 1) "Q")
+                        (Single (Score 1, Size 1) "u")
+                    )
+                    ( Append
+                        (Score 2, Size 2)
+                        (Single (Score 1, Size 1) "a")
+                        (Single (Score 1, Size 1) "n")
+                    )
+                )
+            )
+    ]
 
 -- Test `numLines`
 numLinesTests :: Test
