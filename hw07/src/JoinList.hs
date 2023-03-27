@@ -99,12 +99,12 @@ scoreLine s = Single (scoreString s) s
 instance Buffer (JoinList (Score, Size) String) where
   toString = F.foldr (++) ""
 
-  -- TODO
-  fromString _ = Empty
+  fromString = foldr prependLineBalance Empty . lines
+
   line = indexJ
 
-  replaceLine 0 c Empty = Single (scoreString c, Size 1) c
-  replaceLine 0 c (Single _ _) = Single (scoreString c, Size 1) c
+  replaceLine 0 c Empty = fromLine c
+  replaceLine 0 c (Single _ _) = fromLine c
   replaceLine 0 _ l = l
   replaceLine n _ l | n < 0 = l
   replaceLine n c l = case l of
@@ -144,3 +144,15 @@ instance F.Foldable (JoinList m) where
   foldMap _ Empty = mempty
   foldMap f (Single _ x) = f x
   foldMap f (Append _ lhs rhs) = foldMap f lhs <> foldMap f rhs
+
+-- This function will always prepend a new line in the append list when possible.
+-- It will also maintain the balance of the list.
+-- TODO
+prependLineBalance :: String -> JoinList (Score, Size) String -> JoinList (Score, Size) String
+prependLineBalance c Empty = fromLine c
+prependLineBalance c l@(Single _ _) = fromLine c +++ l
+prependLineBalance c l@(Append _ _ _) = fromLine c +++ l
+
+-- Create a single list from a line.
+fromLine :: String -> JoinList (Score, Size) String
+fromLine c = Single (scoreString c, Size 1) c
