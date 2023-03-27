@@ -99,7 +99,7 @@ scoreLine s = Single (scoreString s) s
 instance Buffer (JoinList (Score, Size) String) where
   toString = F.foldr (++) ""
 
-  fromString = foldr prependLineBalance Empty . lines
+  fromString = fromLines . lines
 
   line = indexJ
 
@@ -141,13 +141,14 @@ instance F.Foldable (JoinList m) where
   foldMap f (Single _ x) = f x
   foldMap f (Append _ lhs rhs) = foldMap f lhs <> foldMap f rhs
 
--- This function will always prepend a new line in the append list when possible.
--- It will also maintain the balance of the list.
--- TODO
-prependLineBalance :: String -> JoinList (Score, Size) String -> JoinList (Score, Size) String
-prependLineBalance c Empty = fromLine c
-prependLineBalance c l@(Single _ _) = fromLine c +++ l
-prependLineBalance c l@(Append _ _ _) = fromLine c +++ l
+-- This function will create a balance join lists from lines.
+fromLines :: [String] -> JoinList (Score, Size) String
+fromLines [] = Empty
+fromLines [l] = fromLine l
+fromLines ls = fromLines firstHalf +++ fromLines secondHalf
+  where
+    halfLines = length ls `div` 2
+    (firstHalf, secondHalf) = splitAt halfLines ls
 
 -- Create a single list from a line.
 fromLine :: String -> JoinList (Score, Size) String

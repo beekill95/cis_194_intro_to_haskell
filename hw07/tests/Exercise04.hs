@@ -58,7 +58,43 @@ toStringTests =
 
 -- Test `fromString`
 fromStringTests :: Test
-fromStringTests = TestList []
+fromStringTests =
+  TestList
+    [ TestLabel "test empty string" $
+        TestCase $
+          assertEqual
+            "should return Empty"
+            (Empty :: JoinList (Score, Size) String)
+            (fromString ""),
+      TestLabel "test string with one line" $
+        TestCase $
+          assertEqual
+            "should return a Single list"
+            (Single (Score 1, Size 1) "A")
+            (fromString "A"),
+      TestLabel "test string with multiple lines" $
+        TestCase $
+          assertEqual
+            "should return a balance Append list"
+            ( Append
+                (Score 10, Size 5)
+                ( Append
+                    (Score 4, Size 2)
+                    (Single (Score 1, Size 1) "A")
+                    (Single (Score 3, Size 1) "B")
+                )
+                ( Append
+                    (Score 6, Size 3)
+                    (Single (Score 3, Size 1) "C")
+                    ( Append
+                        (Score 3, Size 2)
+                        (Single (Score 2, Size 1) "D")
+                        (Single (Score 1, Size 1) "E")
+                    )
+                )
+            )
+            (fromString "A\nB\nC\nD\nE")
+    ]
 
 -- Test `line`
 lineTests :: Test
