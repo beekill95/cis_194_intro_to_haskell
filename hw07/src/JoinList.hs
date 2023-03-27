@@ -1,7 +1,10 @@
+{-# LANGUAGE FlexibleInstances #-}
 {-# OPTIONS_GHC -Wall #-}
 
 module JoinList where
 
+import Buffer
+import qualified Data.Foldable as F
 import Scrabble
 import Sized
 
@@ -90,3 +93,30 @@ takeJ n l@(Append s lhs rhs)
 scoreLine :: String -> JoinList Score String
 scoreLine "" = Empty
 scoreLine s = Single (scoreString s) s
+
+-- Exercise 4: Make JoinList an instance of Buffer.
+-- Here, each Single will contain a line.
+instance Buffer (JoinList (Score, Size) String) where
+  toString = F.foldr (++) ""
+
+  -- TODO
+  fromString _ = Empty
+  line = indexJ
+
+  -- TODO
+  replaceLine _ _ _ = Empty
+
+  numLines Empty = getSize mempty
+  numLines (Single s _) = sizeToInt s
+  numLines (Append s _ _) = sizeToInt s
+
+  value Empty = s
+    where
+      (Score s) = mempty
+  value (Single (Score s, _) _) = s
+  value (Append (Score s, _) _ _) = s
+
+instance F.Foldable (JoinList m) where
+  foldMap _ Empty = mempty
+  foldMap f (Single _ x) = f x
+  foldMap f (Append _ lhs rhs) = foldMap f lhs <> foldMap f rhs
