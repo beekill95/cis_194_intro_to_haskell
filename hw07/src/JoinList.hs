@@ -103,7 +103,6 @@ instance Buffer (JoinList (Score, Size) String) where
 
   line = indexJ
 
-  replaceLine 0 c Empty = fromLine c
   replaceLine 0 c (Single _ _) = fromLine c
   replaceLine 0 _ l = l
   replaceLine n _ l | n < 0 = l
@@ -112,10 +111,7 @@ instance Buffer (JoinList (Score, Size) String) where
       if n >= sizeToInt as
         then l
         else case lhs of
-          Empty ->
-            if n == 0
-              then replaceLine n c lhs +++ rhs
-              else lhs +++ replaceLine (n - 1) c rhs
+          Empty -> lhs +++ replaceLine n c rhs
           (Single s _) ->
             if n < sInt
               then replaceLine n c lhs +++ rhs

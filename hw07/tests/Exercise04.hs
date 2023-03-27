@@ -133,8 +133,8 @@ replaceLineTests =
     [ TestLabel "test replace empty list with valid index" $
         TestCase $
           assertEqual
-            "should return a single list"
-            (Single (Score 1, Size 1) "A")
+            "should return Empty list"
+            (Empty :: (JoinList (Score, Size) String))
             (replaceLine 0 "A" Empty),
       TestLabel "test replace empty list with invalid index" $
         TestCase $
