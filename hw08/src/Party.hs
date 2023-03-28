@@ -32,9 +32,10 @@ treeFold e f (Node {rootLabel = root, subForest = trees}) =
 -- Exercise 3: Implement function `nextLevel` that will compute two guest lists:
 -- + The best possible guest list if we invite the boss (the employee at the root of the tree)
 -- + The best possible guest list if we don't invite the boss.
--- TODO
 nextLevel :: Employee -> [(GuestList, GuestList)] -> (GuestList, GuestList)
-nextLevel _ _ = mempty
+nextLevel e ls = (glCons e withoutSubordinates, withSubordinates)
+  where
+    (withSubordinates, withoutSubordinates) = foldr (<>) mempty ls
 
 -- Exercise 4: Implement function `maxFun` that takes a company hierarchy
 -- and outputs a fun-maximizing guest list.
