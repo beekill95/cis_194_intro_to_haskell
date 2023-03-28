@@ -5,7 +5,6 @@ module JoinList where
 
 import Buffer
 import qualified Data.Foldable as F
-import Debug.Trace
 import Scrabble
 import Sized
 
@@ -104,10 +103,7 @@ instance Buffer (JoinList (Score, Size) String) where
 
   line = indexJ
 
-  -- FIXME: replaceLine is not working correct!
-  replaceLine n c l | trace ("\n\nreplaceLine " ++ show n ++ "\n" ++ show c ++ "\n" ++ show l) False = undefined
   replaceLine 0 c (Single _ _) = fromLine c
-  replaceLine 0 _ l = l
   replaceLine n _ l | n < 0 = l
   replaceLine n c l = case l of
     (Append as lhs rhs) ->
