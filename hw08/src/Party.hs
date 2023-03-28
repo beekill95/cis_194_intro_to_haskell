@@ -1,5 +1,6 @@
 module Party where
 
+import Data.Tree
 import Employee
 
 -- Exercise 1.1: add a new employee to guest list and update total fun score.
@@ -22,3 +23,8 @@ moreFun lhs rhs = case lhs `compare` rhs of
   LT -> rhs
   GT -> lhs
   EQ -> lhs
+
+-- Exercise 2: Tree fold.
+treeFold :: (a -> b -> b) -> (b -> b -> b) -> b -> Tree a -> b
+treeFold f f2 b (Node {rootLabel = a, subForest = trees}) =
+  foldr f2 b $ map (treeFold f f2 b) trees
