@@ -25,6 +25,6 @@ moreFun lhs rhs = case lhs `compare` rhs of
   EQ -> lhs
 
 -- Exercise 2: Tree fold.
-treeFold :: (a -> b -> b) -> (b -> b -> b) -> b -> Tree a -> b
-treeFold f f2 b (Node {rootLabel = a, subForest = trees}) =
-  foldr f2 b $ map (treeFold f f2 b) trees
+treeFold :: e -> (a -> [b] -> b) -> Tree a -> b
+treeFold e f (Node {rootLabel = root, subForest = trees}) =
+  f root (map (treeFold e f) trees)
