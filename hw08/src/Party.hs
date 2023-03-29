@@ -2,6 +2,7 @@ module Party where
 
 import Data.Tree
 import Employee
+import Text.Read (readMaybe)
 
 -- Exercise 1.1: add a new employee to guest list and update total fun score.
 -- Assume that the employee doesn't exist in the list,
@@ -45,6 +46,9 @@ maxFun = uncurry moreFun . treeFold mempty nextLevel
 -- Exercise 5: Implement an IO method that reads
 -- the company's hierarchy, and then prints out
 -- formatted guest list.
+readCompany :: String -> Maybe (Tree Employee)
+readCompany = readMaybe
+
 main :: IO ()
 main = do
   putStrLn "TODO"
