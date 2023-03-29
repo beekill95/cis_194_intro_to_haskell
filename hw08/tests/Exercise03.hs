@@ -17,6 +17,11 @@ exercise03Tests =
         TestCase $
           assertEqual
             "should return a pair of guest lists where the employee is added to the list without direct subordinates"
-            (GL [Emp "U" 1] 1, mempty)
-            (nextLevel (Emp "Q" 1) [])
+            (GL [Emp "Q" 10, Emp "K" 5, Emp "I" 6] 21, GL [Emp "B" 1, Emp "E" 2] 3)
+            ( nextLevel
+                (Emp "Q" 10)
+                [ (GL [Emp "B" 1] 1, GL [Emp "K" 5] 5),
+                  (GL [Emp "E" 2] 2, GL [Emp "I" 6] 6)
+                ]
+            )
     ]
