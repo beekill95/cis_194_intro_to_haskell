@@ -1,5 +1,6 @@
 module Party where
 
+import Data.List (sort)
 import Data.Tree
 import Employee
 import Text.Read (readMaybe)
@@ -49,6 +50,14 @@ maxFun = uncurry moreFun . treeFold mempty nextLevel
 readCompany :: String -> Maybe (Tree Employee)
 readCompany = readMaybe
 
-main :: IO ()
-main = do
-  putStrLn "TODO"
+showGuestList :: GuestList -> [String]
+showGuestList (GL guests fun) =
+  ("Total fun: " ++ show fun) : (sort . map empName) guests
+
+main :: String -> IO ()
+main fn = do
+  file <- readFile fn
+  case readCompany file of
+    Just companyHier ->
+      (mapM_ putStrLn . showGuestList . maxFun) companyHier
+    Nothing -> putStrLn $ "Invalid file: " ++ fn
