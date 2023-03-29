@@ -41,3 +41,10 @@ nextLevel e ls = (glCons e withoutSubordinates, withSubordinates)
 -- and outputs a fun-maximizing guest list.
 maxFun :: Tree Employee -> GuestList
 maxFun = uncurry moreFun . treeFold mempty nextLevel
+
+-- Exercise 5: Implement an IO method that reads
+-- the company's hierarchy, and then prints out
+-- formatted guest list.
+main :: IO ()
+main = do
+  putStrLn "TODO"

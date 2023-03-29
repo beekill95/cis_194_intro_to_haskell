@@ -1,5 +1,5 @@
 module Main where
 
-main :: IO ()
-main = do
-  putStrLn "Hello, Haskell!"
+import qualified Party (main)
+
+main = Party.main
