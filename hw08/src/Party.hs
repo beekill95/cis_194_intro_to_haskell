@@ -40,4 +40,4 @@ nextLevel e ls = (glCons e withoutSubordinates, withSubordinates)
 -- Exercise 4: Implement function `maxFun` that takes a company hierarchy
 -- and outputs a fun-maximizing guest list.
 maxFun :: Tree Employee -> GuestList
-maxFun _ = mempty
+maxFun = uncurry moreFun . treeFold mempty nextLevel
