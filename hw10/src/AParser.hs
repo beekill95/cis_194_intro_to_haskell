@@ -6,6 +6,7 @@ module AParser where
 
 import Control.Applicative
 import Data.Char
+import Data.Foldable
 
 -- A parser for a value of type a is a function which takes a String
 -- represnting the input to be parsed, and succeeds or fails; if it
@@ -63,11 +64,44 @@ first :: (a -> b) -> (a, c) -> (b, c)
 first f (a, c) = (f a, c)
 
 instance Functor Parser where
-  fmap f (Parser {runParser = parse}) = Parser parse'
+  fmap f (Parser parse) = Parser parse'
     where
       parse' = fmap (first f) . parse
 
 -- Exercise 2: Implement an Applicative instance for Parser.
 instance Applicative Parser where
   pure a = Parser (const (Just (a, "")))
-  (<*>) _ _ = _
+  (<*>) (Parser p1) (Parser p2) = Parser parse
+    where
+      parse s = case p1 s of
+        Just (f, r) -> fmap (first f) (p2 r)
+        Nothing -> Nothing
+
+-- Exercise 3: Simple parsers.
+abParser :: Parser (Char, Char)
+abParser = (,) <$> char 'a' <*> char 'b'
+
+abParser_ :: Parser ()
+abParser_ = fmap (const ()) abParser
+
+intPair :: Parser [Integer]
+intPair = fmap toList intPair'
+  where
+    intPair' = (,) <$> posInt <*> posInt
+
+-- Exercise 4: Implement an Alternative instance for Parser.
+instance Alternative Parser where
+  empty = Parser (const Nothing)
+  (<|>) (Parser p1) (Parser p2) = Parser parse
+    where
+      parse s = case p1 s of
+        r@(Just _) -> r
+        Nothing -> p2 s
+
+-- Exercise 5: Implement a parser `intOrUppercase` which parses
+-- either an integer value or an uppercase character.
+intOrUppercase :: Parser ()
+intOrUppercase = intParser <|> uppercaseParser
+  where
+    intParser = fmap (const ()) posInt
+    uppercaseParser = fmap (const ()) (satisfy isUpper)
