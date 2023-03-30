@@ -6,7 +6,6 @@ module AParser where
 
 import Control.Applicative
 import Data.Char
-import Data.Foldable
 
 -- A parser for a value of type a is a function which takes a String
 -- represnting the input to be parsed, and succeeds or fails; if it
@@ -85,9 +84,7 @@ abParser_ :: Parser ()
 abParser_ = fmap (const ()) abParser
 
 intPair :: Parser [Integer]
-intPair = fmap toList intPair'
-  where
-    intPair' = (,) <$> posInt <*> posInt
+intPair = (\l _ r -> [l, r]) <$> posInt <*> char ' ' <*> posInt
 
 -- Exercise 4: Implement an Alternative instance for Parser.
 instance Alternative Parser where
