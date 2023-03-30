@@ -5,6 +5,7 @@ import Exercise02
 import Exercise03
 import Exercise04
 import Exercise05
+import System.Exit
 import Test.HUnit
 
 tests :: Test
@@ -18,4 +19,6 @@ tests =
     ]
 
 main :: IO ()
-main = runTestTT tests >>= print
+main = do
+  result <- runTestTT tests
+  if failures result > 0 then exitFailure else exitSuccess
