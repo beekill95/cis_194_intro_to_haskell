@@ -49,3 +49,17 @@ data SExpr
   = A Atom
   | Comb [SExpr]
   deriving (Show)
+
+-- My S-expr parser.
+parseSExpr :: Parser SExpr
+parseSExpr = spaces *> (fmap A atomParser <|> fmap Comb combExprParser)
+  where
+    leftParenParser = spaces *> char '('
+    rightParentParser = spaces *> char ')'
+    combExprParser = leftParenParser *> zeroOrMore parseSExpr <* rightParentParser
+
+atomParser :: Parser Atom
+atomParser = identParser <|> integerParser
+  where
+    integerParser = fmap N posInt
+    identParser = fmap I ident
