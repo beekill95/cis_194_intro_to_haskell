@@ -45,6 +45,7 @@ executable hw12
     -- other-extensions:
     build-depends:
         base ^>=4.16.4.0,
+        MonadRandom >= 0.6 && < 0.7,
         hw12
 
     hs-source-dirs:   app
