@@ -28,7 +28,7 @@ type Army = Int
 
 data Battlefield = Battlefield {attackers :: Army, defenders :: Army}
 
--- Simulate a battle.
+-- Exercise 02: Simulate a battle.
 battle :: Battlefield -> Rand StdGen Battlefield
 battle (Battlefield attackers defenders) = do
   (attackersLeft, defendersLeft) <- duel (sAttackers, sDefenders)
@@ -94,3 +94,9 @@ zipLongest _ _ [] [] = []
 zipLongest aDef bDef [] (x : xs) = (aDef, x) : zipLongest aDef bDef [] xs
 zipLongest aDef bDef (x : xs) [] = (x, bDef) : zipLongest aDef bDef xs []
 zipLongest aDef bDef (a : as) (b : bs) = (a, b) : zipLongest aDef bDef as bs
+
+-- Exercise 03: Simulate an entire invasion attempt.
+invade :: Battlefield -> Rand StdGen Battlefield
+invade b@(Battlefield n _) | n < 2 = return b
+invade b@(Battlefield _ 0) = return b
+invade b = battle b >>= \b' -> invade b
