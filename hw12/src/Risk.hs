@@ -64,9 +64,10 @@ duel :: (Army, Army) -> Rand StdGen (Army, Army)
 duel (attackers, defenders) = do
   attDices <- rollDices attackers
   defDices <- rollDices defenders
+
   return
     ( foldr
-        (\(a, d) b -> attack a d b)
+        (collect . uncurry attack)
         (0, 0)
         $ zipLongest (DV 0) (DV 0) attDices defDices
     )
@@ -74,11 +75,18 @@ duel (attackers, defenders) = do
     rollDices :: Army -> Rand StdGen [DieValue]
     rollDices n = sort <$> mapM (const die) [1 .. n]
 
+    collect :: AttackResult -> (Army, Army) -> (Army, Army)
+    collect r (att, def)
+      | r == Victory = (att + 1, def)
+      | otherwise = (att, def + 1)
+
 -- Logic for determining who will win the fight.
-attack :: DieValue -> DieValue -> (Army, Army) -> (Army, Army)
-attack attDice defDice (a, d)
-  | attDice > defDice = (a + 1, d)
-  | otherwise = (a, d + 1)
+data AttackResult = Victory | Defeat deriving (Eq)
+
+attack :: DieValue -> DieValue -> AttackResult
+attack attDice defDice
+  | attDice > defDice = Victory
+  | otherwise = Defeat
 
 -- Utilities.
 zipLongest :: a -> b -> [a] -> [b] -> [(a, b)]
