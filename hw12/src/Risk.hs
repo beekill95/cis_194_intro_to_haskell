@@ -100,3 +100,12 @@ invade :: Battlefield -> Rand StdGen Battlefield
 invade b@(Battlefield n _) | n < 2 = return b
 invade b@(Battlefield _ 0) = return b
 invade b = battle b >>= \b' -> invade b
+
+-- Exercise 04: Return the success probability.
+successProb :: Battlefield -> Rand StdGen Double
+successProb = successProb' 1000
+
+successProb' :: Int -> Battlefield -> Rand StdGen Double
+successProb' n b = do
+  battles <- repeat $ invade b
+  return 0
