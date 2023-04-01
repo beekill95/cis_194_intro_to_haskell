@@ -28,8 +28,29 @@ type Army = Int
 
 data Battlefield = Battlefield {attackers :: Army, defenders :: Army}
 
+-- Simulate a battle.
 battle :: Battlefield -> Rand StdGen Battlefield
-battle b = undefined
+battle (Battlefield attackers defenders) = do
+  (attackersLeft, defendersLeft) <- duel (sAttackers, sDefenders)
+  return $ Battlefield (rAttackers + attackersLeft) (rDefenders + defendersLeft)
+  where
+    (rAttackers, sAttackers) = sendAttackers attackers
+    (rDefenders, sDefenders) = sendDefenders defenders
+
+-- Logic for sending army for a duel.
+sendAttackers :: Army -> (Army, Army)
+sendAttackers n
+  | n <= 0 = (0, 0)
+  | n == 1 = (1, 0)
+  | n == 2 = (1, 1)
+  | n == 3 = (1, 2)
+  | otherwise = (n - 3, 3)
+
+sendDefenders :: Army -> (Army, Army)
+sendDefenders n
+  | n <= 0 = (0, 0)
+  | n == 1 = (0, 1)
+  | otherwise = (n - 2, 2)
 
 -- This function will implement the rule of a duel between attackers and defenders.
 -- Unlike in a battle where there is a limit of how many attackers and defenders are allowed,
@@ -39,24 +60,25 @@ battle b = undefined
 -- If attacker's dice's value is larger, then the attacker wins, otherwise, the defender wins.
 -- The function will then return the result of the duel,
 -- which is how many attackers and defenders left.
-duel :: Battlefield -> Rand StdGen Battlefield
-duel (Battlefield attackers defenders) = do
+duel :: (Army, Army) -> Rand StdGen (Army, Army)
+duel (attackers, defenders) = do
   attDices <- rollDices attackers
   defDices <- rollDices defenders
   return
     ( foldr
         (\(a, d) b -> attack a d b)
-        (Battlefield 0 0)
+        (0, 0)
         $ zipLongest (DV 0) (DV 0) attDices defDices
     )
   where
     rollDices :: Army -> Rand StdGen [DieValue]
     rollDices n = sort <$> mapM (const die) [1 .. n]
 
-    attack :: DieValue -> DieValue -> Battlefield -> Battlefield
-    attack attDice defDice (Battlefield a d)
-      | attDice > defDice = Battlefield (a + 1) d
-      | otherwise = Battlefield a (d + 1)
+-- Logic for determining who will win the fight.
+attack :: DieValue -> DieValue -> (Army, Army) -> (Army, Army)
+attack attDice defDice (a, d)
+  | attDice > defDice = (a + 1, d)
+  | otherwise = (a, d + 1)
 
 -- Utilities.
 zipLongest :: a -> b -> [a] -> [b] -> [(a, b)]
