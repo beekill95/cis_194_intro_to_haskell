@@ -1,0 +1,66 @@
+cabal-version:      2.4
+name:               fa14-hw09-testing
+version:            0.1.0.0
+
+-- A short (one-line) description of the package.
+-- synopsis:
+
+-- A longer description of the package.
+-- description:
+
+-- A URL where users can report bugs.
+-- bug-reports:
+
+-- The license under which the package is released.
+-- license:
+
+-- The package author(s).
+-- author:
+
+-- An email address to which users can send suggestions, bug reports, and patches.
+-- maintainer:
+
+-- A copyright notice.
+-- copyright:
+-- category:
+extra-source-files: CHANGELOG.md
+
+library
+    exposed-modules:  BST, Ring
+
+    -- Modules included in this library but not exported.
+    -- other-modules:
+
+    -- LANGUAGE extensions used by modules in this package.
+    -- other-extensions:
+    build-depends:    base ^>=4.16.4.0
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+executable fa14-hw09-testing
+    main-is:          Main.hs
+
+    -- Modules included in this executable, other than Main.
+    -- other-modules:
+
+    -- LANGUAGE extensions used by modules in this package.
+    -- other-extensions:
+    build-depends:
+        base ^>=4.16.4.0,
+        fa14-hw09-testing
+
+    hs-source-dirs:   app
+    default-language: Haskell2010
+
+test-suite fa14-hw09-tests
+    default-language: Haskell2010
+    type: exitcode-stdio-1.0
+    hs-source-dirs: tests
+    main-is: Main.hs
+    other-modules:
+        BSTTests
+    build-depends:
+        base ^>=4.16.4.0,
+        HUnit ^>=1.6,
+        QuickCheck ^>=2.14.2,
+        fa14-hw09-testing
