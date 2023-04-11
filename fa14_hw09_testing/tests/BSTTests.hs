@@ -1,5 +1,9 @@
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+
+{-# HLINT ignore "Use camelCase" #-}
 module BSTTests where
 
+import BST
 import Test.QuickCheck
 
 -- TESTING CODE. (Students aren't expected to understand this yet, but it

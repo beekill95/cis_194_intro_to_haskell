@@ -58,7 +58,8 @@ test-suite fa14-hw09-tests
     hs-source-dirs: tests
     main-is: Main.hs
     other-modules:
-        BSTTests
+        BSTTests,
+        RingTests
     build-depends:
         base ^>=4.16.4.0,
         HUnit ^>=1.6,
