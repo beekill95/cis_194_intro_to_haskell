@@ -9,6 +9,13 @@ instance Arbitrary Mod5 where
 
 instance Arbitrary Mat2x2 where
   arbitrary = MkMat <$> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary
+  shrink = shrinkMat2x2
 
-  -- Exercise 2: Write `shrink` method for Mat2x2.
-  shrink _ = []
+-- Exercise 2: Write `shrink` method for Mat2x2.
+shrinkMat2x2 :: Mat2x2 -> [Mat2x2]
+shrinkMat2x2 (MkMat a b c d) = []
+  where
+    as = shrink a
+    bs = shrink b
+    cs = shrink c
+    ds = shrink d
