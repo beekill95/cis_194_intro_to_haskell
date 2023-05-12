@@ -74,3 +74,18 @@ prop_ringProp_8 a b c = (a `add` b) `mul` c == (a `mul` c) `add` (b `mul` c)
 
 -- Exercise 4: One prop to rule them all.
 -- TODO: implement one prop that contains all ring properties.
+prop_ringProps :: (Ring a, Eq a, Arbitrary a, Show a) => ((a -> a -> a -> Bool) -> (a -> a -> a -> Bool)) -> Property
+prop_ringProps f =
+  conjoin
+    [ f prop_ringProp_1,
+      \a b _ -> prop_ringProp_2 a b,
+      applyFst prop_ringProp_3,
+      applyFst prop_ringProp_4,
+      prop_ringProp_5,
+      applyFst prop_ringProp_6,
+      prop_ringProp_7,
+      prop_ringProp_8
+    ]
+
+applyFst :: (a -> r) -> a -> b -> c -> r
+applyFst f a _ _ = f a
