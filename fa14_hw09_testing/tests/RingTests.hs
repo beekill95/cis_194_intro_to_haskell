@@ -37,6 +37,21 @@ zipLongestWith4 f a b c d as bs cs ds = abcd
 -- Exercise 3: Test 9 properties of rings using QuickCheck
 -- These properties can be found in: https://en.wikipedia.org/wiki/Ring_(mathematics)#Definition
 
--- Prop 1: A ring is associative under addition:
--- (a + b) + c = a + (b + c)
--- TODO
+-- Prop 1: A ring is associative under addition: (a + b) + c = a + (b + c)
+prop_ringProp_1 :: (Ring a, Eq a) => a -> a -> a -> Bool
+prop_ringProp_1 a b c = (a `add` b) `add` c == a `add` (b `add` c)
+
+-- Prop 2: A ring is is communitive under addition: a + b = b + a
+prop_ringProp_2 :: (Ring a, Eq a) => a -> a -> Bool
+prop_ringProp_2 a b = a `add` b == b `add` a
+
+-- Prop 3: There is an element `0` such that a + 0 = a
+prop_ringProp_3 :: (Ring a, Eq a) => a -> Bool
+prop_ringProp_3 a = a `add` addId == a
+
+-- Prop 4: For each a, there exists -a such that (a + -a) = 0
+prop_ringProp_4 :: (Ring a, Eq a) => a -> Bool
+prop_ringProp_4 a = a `add` addInv a == addId
+
+-- Exercise 4: One prop to rule them all.
+-- TODO: implement one prop that contains all ring properties.
