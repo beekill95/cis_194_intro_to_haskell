@@ -12,8 +12,11 @@ instance Arbitrary Mat2x2 where
   shrink = shrinkMat2x2
 
 -- Exercise 2: Write `shrink` method for Mat2x2.
+-- Hint: use zipLongest
 shrinkMat2x2 :: Mat2x2 -> [Mat2x2]
-shrinkMat2x2 (MkMat a b c d) = []
+shrinkMat2x2 (MkMat a b c d) = case (as, bs, cs, ds) of
+    ([], [], [], []) -> []
+    ([], _, _, _) -> []
   where
     as = shrink a
     bs = shrink b
