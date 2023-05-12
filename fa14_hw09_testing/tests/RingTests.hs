@@ -33,3 +33,10 @@ zipLongestWith4 f a b c d as bs cs ds = abcd
     ab = zipLongestWith f a b as bs
     abc = zipLongestWith (\abf y -> abf y) (f a b) c ab cs
     abcd = zipLongestWith (\abcf y -> abcf y) (f a b c) d abc ds
+
+-- Exercise 3: Test 9 properties of rings using QuickCheck
+-- These properties can be found in: https://en.wikipedia.org/wiki/Ring_(mathematics)#Definition
+
+-- Prop 1: A ring is associative under addition:
+-- (a + b) + c = a + (b + c)
+-- TODO
