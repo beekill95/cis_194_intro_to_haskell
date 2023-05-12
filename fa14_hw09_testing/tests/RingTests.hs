@@ -53,5 +53,24 @@ prop_ringProp_3 a = a `add` addId == a
 prop_ringProp_4 :: (Ring a, Eq a) => a -> Bool
 prop_ringProp_4 a = a `add` addInv a == addId
 
+-- Prop 5: A ring is a monoid under multiplication.
+prop_ringProp_5 :: (Ring a, Eq a) => a -> a -> a -> Bool
+prop_ringProp_5 a b c = (a `mul` b) `mul` c == a `mul` (b `mul` c)
+
+-- Prop 6: There is an element `1` such that a . 1 = a
+prop_ringProp_6 :: (Ring a, Eq a) => a -> Bool
+prop_ringProp_6 a = a `mul` mulId == a
+
+-- Prop 7: Multiplication is left-distributive under addition.
+prop_ringProp_7 :: (Ring a, Eq a) => a -> a -> a -> Bool
+prop_ringProp_7 a b c = a `mul` (b `add` c) == (a `mul` b) `add` (a `mul` c)
+
+-- Prop 8: Multiplication is right-distributive under addition.
+prop_ringProp_8 :: (Ring a, Eq a) => a -> a -> a -> Bool
+prop_ringProp_8 a b c = (a `add` b) `mul` c == (a `mul` c) `add` (b `mul` c)
+
+-- Prop 9: What is it?
+-- TODO
+
 -- Exercise 4: One prop to rule them all.
 -- TODO: implement one prop that contains all ring properties.
