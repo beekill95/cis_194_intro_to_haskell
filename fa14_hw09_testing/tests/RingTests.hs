@@ -109,3 +109,10 @@ propTests =
       counterexample "Ring Properties for Integer" $ prop_ringProps integerRing,
       counterexample "Ring Properties for Boolean" $ prop_ringProps boolRing
     ]
+
+-- The test above will fail for boolean, property #4
+-- which is: there exist a value (-a) such that (a) + (-a) = 0.
+-- For boolean ring, we can see that the ring needs to have at least 3 different values:
+-- a, -a, and 0.
+-- But boolean has only 2 values: True and False
+-- Thus, it cannot satisfy this property.
