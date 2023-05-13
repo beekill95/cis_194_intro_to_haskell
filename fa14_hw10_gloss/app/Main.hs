@@ -1,15 +1,21 @@
 module Main where
 
 import Graphics.Gloss
+import Pong
 
-window :: Display
-window = InWindow "Hello, world!" (200, 200) (200, 200)
+-- | Window's width, height, and offset.
+width, height, offset :: Int
+width = 800
+height = 500
+offset = 200
+
+window = createWindow width height offset "Pong"
 
 background :: Color
 background = white
 
 drawing :: Picture
-drawing = circle 80
+drawing = render (fromIntegral width) (fromIntegral height) initialState
 
 main :: IO ()
 main = display window background drawing

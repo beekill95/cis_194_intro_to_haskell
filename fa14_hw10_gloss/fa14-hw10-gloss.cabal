@@ -22,7 +22,7 @@ maintainer:         nguyenmbquan95@gmail.com
 extra-source-files: CHANGELOG.md
 
 library
-    exposed-modules: MyLib
+    exposed-modules: Pong
 
     -- Modules included in this library but not exported.
     -- other-modules:
