@@ -33,7 +33,7 @@ library
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
-    build-depends:    base ^>=4.16.4.0
+    build-depends:    base ^>=4.17.1.0
     hs-source-dirs:   src
     default-language: Haskell2010
 
@@ -46,7 +46,7 @@ executable fa14-hw09-testing
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
     build-depends:
-        base ^>=4.16.4.0,
+        base ^>=4.17.1.0,
         fa14-hw09-testing
 
     hs-source-dirs:   app
@@ -61,7 +61,7 @@ test-suite fa14-hw09-tests
         BSTTests,
         RingTests
     build-depends:
-        base ^>=4.16.4.0,
+        base ^>=4.17.1.0,
         HUnit ^>=1.6,
         QuickCheck ^>=2.14.2,
         fa14-hw09-testing
