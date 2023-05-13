@@ -43,6 +43,7 @@ executable fa14-hw10-gloss
     -- other-extensions:
     build-depends:
         base ^>=4.16.4.0,
+        gloss==1.13.*,
         fa14-hw10-gloss
 
     hs-source-dirs:   app

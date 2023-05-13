@@ -1,8 +1,15 @@
 module Main where
 
-import qualified MyLib (someFunc)
+import Graphics.Gloss
+
+window :: Display
+window = InWindow "Hello, world!" (200, 200) (200, 200)
+
+background :: Color
+background = white
+
+drawing :: Picture
+drawing = circle 80
 
 main :: IO ()
-main = do
-  putStrLn "Hello, Haskell!"
-  MyLib.someFunc
+main = display window background drawing
