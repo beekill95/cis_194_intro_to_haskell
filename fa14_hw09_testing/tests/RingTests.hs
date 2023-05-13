@@ -61,6 +61,10 @@ prop_ringProp_5 a b c = (a `mul` b) `mul` c == a `mul` (b `mul` c)
 prop_ringProp_6 :: (Ring a, Eq a) => a -> Bool
 prop_ringProp_6 a = a `mul` mulId == a
 
+-- Prop 6a: and a . 1 = a
+prop_ringProp_6a :: (Ring a, Eq a) => a -> Bool
+prop_ringProp_6a a = mulId `mul` a == a
+
 -- Prop 7: Multiplication is left-distributive under addition.
 prop_ringProp_7 :: (Ring a, Eq a) => a -> a -> a -> Bool
 prop_ringProp_7 a b c = a `mul` (b `add` c) == (a `mul` b) `add` (a `mul` c)
@@ -68,9 +72,6 @@ prop_ringProp_7 a b c = a `mul` (b `add` c) == (a `mul` b) `add` (a `mul` c)
 -- Prop 8: Multiplication is right-distributive under addition.
 prop_ringProp_8 :: (Ring a, Eq a) => a -> a -> a -> Bool
 prop_ringProp_8 a b c = (a `add` b) `mul` c == (a `mul` c) `add` (b `mul` c)
-
--- Prop 9: What is it?
--- TODO
 
 -- Exercise 4: One prop to rule them all.
 prop_ringProps :: (Ring a, Eq a, Arbitrary a, Show a) => ((a -> a -> a -> Bool) -> (a -> a -> a -> Bool)) -> Property
@@ -82,6 +83,7 @@ prop_ringProps f =
       counterexample "Ring property #4" $ f (applyFst prop_ringProp_4),
       counterexample "Ring property #5" $ f prop_ringProp_5,
       counterexample "Ring property #6" $ f (applyFst prop_ringProp_6),
+      counterexample "Ring property #6a" $ f (applyFst prop_ringProp_6a),
       counterexample "Ring property #7" $ f prop_ringProp_7,
       counterexample "Ring property #8" $ f prop_ringProp_8
     ]
