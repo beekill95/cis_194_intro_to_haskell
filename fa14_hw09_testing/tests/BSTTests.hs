@@ -26,7 +26,7 @@ mk_tree n =
     ]
 
 prop_ordered :: BST Int -> Bool
-prop_ordered x = isBST compare x == is_sorted (getElements x)
+prop_ordered x = isBST x == is_sorted (getElements x)
   where
     is_sorted [] = True
     is_sorted [_] = True
@@ -34,3 +34,8 @@ prop_ordered x = isBST compare x == is_sorted (getElements x)
 
 test :: IO ()
 test = quickCheck prop_ordered
+
+bstTests =
+  conjoin
+    [ counterexample "Test Ordered" prop_ordered
+    ]

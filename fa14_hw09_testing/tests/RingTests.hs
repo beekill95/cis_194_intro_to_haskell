@@ -104,7 +104,7 @@ integerRing = id
 boolRing :: (Bool -> Bool -> Bool -> Bool) -> (Bool -> Bool -> Bool -> Bool)
 boolRing = id
 
-propTests =
+ringTests =
   conjoin
     [ counterexample "Ring Properties for Mat2x2" $ prop_ringProps mat2x2Ring,
       counterexample "Ring Properties for Mod5" $ prop_ringProps mod5Ring,
