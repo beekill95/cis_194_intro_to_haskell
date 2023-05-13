@@ -73,19 +73,39 @@ prop_ringProp_8 a b c = (a `add` b) `mul` c == (a `mul` c) `add` (b `mul` c)
 -- TODO
 
 -- Exercise 4: One prop to rule them all.
--- TODO: implement one prop that contains all ring properties.
 prop_ringProps :: (Ring a, Eq a, Arbitrary a, Show a) => ((a -> a -> a -> Bool) -> (a -> a -> a -> Bool)) -> Property
 prop_ringProps f =
   conjoin
-    [ f prop_ringProp_1,
-      \a b _ -> prop_ringProp_2 a b,
-      applyFst prop_ringProp_3,
-      applyFst prop_ringProp_4,
-      prop_ringProp_5,
-      applyFst prop_ringProp_6,
-      prop_ringProp_7,
-      prop_ringProp_8
+    [ counterexample "Ring property #1" $ f prop_ringProp_1,
+      counterexample "Ring property #2" $ f (\a b _ -> prop_ringProp_2 a b),
+      counterexample "Ring property #3" $ f (applyFst prop_ringProp_3),
+      counterexample "Ring property #4" $ f (applyFst prop_ringProp_4),
+      counterexample "Ring property #5" $ f prop_ringProp_5,
+      counterexample "Ring property #6" $ f (applyFst prop_ringProp_6),
+      counterexample "Ring property #7" $ f prop_ringProp_7,
+      counterexample "Ring property #8" $ f prop_ringProp_8
     ]
 
 applyFst :: (a -> r) -> a -> b -> c -> r
 applyFst f a _ _ = f a
+
+-- Exercise 5: Property-based tests for all ring types.
+mat2x2Ring :: (Mat2x2 -> Mat2x2 -> Mat2x2 -> Bool) -> (Mat2x2 -> Mat2x2 -> Mat2x2 -> Bool)
+mat2x2Ring = id
+
+mod5Ring :: (Mod5 -> Mod5 -> Mod5 -> Bool) -> (Mod5 -> Mod5 -> Mod5 -> Bool)
+mod5Ring = id
+
+integerRing :: (Integer -> Integer -> Integer -> Bool) -> (Integer -> Integer -> Integer -> Bool)
+integerRing = id
+
+boolRing :: (Bool -> Bool -> Bool -> Bool) -> (Bool -> Bool -> Bool -> Bool)
+boolRing = id
+
+propTests =
+  conjoin
+    [ counterexample "Ring Properties for Mat2x2" $ prop_ringProps mat2x2Ring,
+      counterexample "Ring Properties for Mod5" $ prop_ringProps mod5Ring,
+      counterexample "Ring Properties for Integer" $ prop_ringProps integerRing,
+      counterexample "Ring Properties for Boolean" $ prop_ringProps boolRing
+    ]
