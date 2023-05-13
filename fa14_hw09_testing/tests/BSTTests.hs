@@ -25,6 +25,14 @@ mk_tree n =
       )
     ]
 
+-- Exercise 7: An Arbitrary instance of BST that creates
+-- proper binary search trees.
+
+genBST :: a -> a -> Gen (BST a)
+genBST = _
+
+-- Tests
+
 prop_ordered :: BST Int -> Bool
 prop_ordered x = isBST x == is_sorted (getElements x)
   where
@@ -34,6 +42,8 @@ prop_ordered x = isBST x == is_sorted (getElements x)
 
 test :: IO ()
 test = quickCheck prop_ordered
+
+-- Tests Collection
 
 bstTests =
   conjoin
