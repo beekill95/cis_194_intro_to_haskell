@@ -3,16 +3,6 @@ module Pong where
 import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Game (Event (EventKey), Key (Char, SpecialKey), SpecialKey (KeyDown, KeyUp))
 
-createWindow :: Int -> Int -> Int -> String -> Display
-createWindow width height offset title =
-  InWindow title (width, height) (offset, offset)
-
-makePong :: Float -> Color -> Float -> Float -> Picture
-makePong radius c x y = translate x y $ color c $ circleSolid radius
-
-makePaddle :: Float -> Float -> Color -> Float -> Float -> Picture
-makePaddle w h c x y = translate x y $ color c $ rectangleSolid w h
-
 -- | Game state.
 data PongGame = PongGame
   { -- | Position of the left paddle.
@@ -28,7 +18,11 @@ data PongGame = PongGame
     -- | Velocity of the pong.
     pongVelocity :: (Float, Float),
     -- | Radius of the pong.
-    pongRadius :: Float
+    pongRadius :: Float,
+    -- | Left player's score.
+    leftScore :: Int,
+    -- | Right player's score.
+    rightScore :: Int
   }
 
 -- | Update pong position, taking into the top and bottom walls.
@@ -160,13 +154,32 @@ paddleDown dec bottomWall paddleHeight paddle =
   where
     halfHeight = paddleHeight / 2
 
+-- Rendering.
+createWindow :: Int -> Int -> Int -> String -> Display
+createWindow width height offset title =
+  InWindow title (width, height) (offset, offset)
+
+makePong :: Float -> Color -> Float -> Float -> Picture
+makePong radius c x y = translate x y $ color c $ circleSolid radius
+
+makePaddle :: Float -> Float -> Color -> Float -> Float -> Picture
+makePaddle w h c x y = translate x y $ color c $ rectangleSolid w h
+
+makeScores :: Float -> Float -> Color -> Int -> Int -> Picture
+makeScores x y c leftScore rightScore =
+  translate x y $
+    color c $
+      text $
+        show leftScore ++ "/" ++ show rightScore
+
 -- Render game state.
 render :: Float -> Float -> PongGame -> Picture
 render w h gameState =
   pictures
     [ uncurry pong $ pongPosition gameState,
       leftPaddle $ leftPaddlePosition gameState,
-      rightPaddle $ rightPaddlePosition gameState
+      rightPaddle $ rightPaddlePosition gameState,
+      score (leftScore gameState) (rightScore gameState)
     ]
   where
     -- Paddles.
@@ -180,3 +193,7 @@ render w h gameState =
     pongColor = dark red
     radius = pongRadius gameState
     pong = makePong radius pongColor
+
+    -- Players' score.
+    scoreColor = black
+    score = makeScores 0 (w / 2) scoreColor

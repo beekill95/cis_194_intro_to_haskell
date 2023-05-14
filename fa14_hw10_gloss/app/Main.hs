@@ -23,7 +23,9 @@ initialState =
       paddleWidth = 30,
       pongRadius = 10,
       pongPosition = (0, 0),
-      pongVelocity = (75, 75)
+      pongVelocity = (75, 75),
+      leftScore = 0,
+      rightScore = 0
     }
 
 -- | Window to draw our game.
