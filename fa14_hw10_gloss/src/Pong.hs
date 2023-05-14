@@ -167,10 +167,12 @@ makePaddle w h c x y = translate x y $ color c $ rectangleSolid w h
 
 makeScores :: Float -> Float -> Color -> Int -> Int -> Picture
 makeScores x y c leftScore rightScore =
-  translate x y $
+  translate 0 y $
     color c $
-      text $
-        show leftScore ++ "/" ++ show rightScore
+      pictures
+        [ translate (-x) 0 $ text $ show leftScore,
+          translate x 0 $ text $ show rightScore
+        ]
 
 -- Render game state.
 render :: Float -> Float -> PongGame -> Picture
@@ -196,4 +198,4 @@ render w h gameState =
 
     -- Players' score.
     scoreColor = black
-    score = makeScores 0 (w / 2) scoreColor
+    score = makeScores (0.2 * w) (0.25 * h) scoreColor
