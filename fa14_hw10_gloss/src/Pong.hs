@@ -26,9 +26,12 @@ data PongGame = PongGame
 
 -- | Update pong position based on current velocity
 -- and time elapsed.
--- TODO: add collision detection.
 updatePong :: Float -> Float -> Float -> PongGame -> PongGame
-updatePong top bottom timeElapsed state = bounceOffWalls top bottom $ state {pongPosition = (newX, newY)}
+updatePong top bottom timeElapsed = bouncePongOffWalls top bottom . movePong timeElapsed
+
+-- | Move the pong based on current velocity and time elapsed.
+movePong :: Float -> PongGame -> PongGame
+movePong timeElapsed state = state {pongPosition = (newX, newY)}
   where
     (x, y) = pongPosition state
     (vx, vy) = pongVelocity state
@@ -37,8 +40,8 @@ updatePong top bottom timeElapsed state = bounceOffWalls top bottom $ state {pon
     newY = y + vy * timeElapsed
 
 -- | Bounce the pong off top and bottom walls.
-bounceOffWalls :: Float -> Float -> PongGame -> PongGame
-bounceOffWalls topWall bottomWall state
+bouncePongOffWalls :: Float -> Float -> PongGame -> PongGame
+bouncePongOffWalls topWall bottomWall state
   | y >= topWall = state {pongVelocity = (vx, -vy)}
   | y <= bottomWall = state {pongVelocity = (vx, -vy)}
   | otherwise = state
