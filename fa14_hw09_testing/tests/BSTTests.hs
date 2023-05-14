@@ -4,6 +4,7 @@
 module BSTTests where
 
 import BST
+import System.Random
 import Test.QuickCheck
 
 -- TESTING CODE. (Students aren't expected to understand this yet, but it
@@ -28,7 +29,7 @@ mk_tree n =
 -- Exercise 7: An Arbitrary instance of BST that creates
 -- proper binary search trees.
 
-genBST :: (Ord a) => a -> a -> Gen (BST a)
+genBST :: (Ord a, Random a) => a -> a -> Gen (BST a)
 genBST lowerBound upperBound
   | lowerBound >= upperBound = return Leaf
   | otherwise =
@@ -41,7 +42,7 @@ genBST lowerBound upperBound
                   x <- choose (lowerBound, upperBound)
                   leftNode {- resize (size - 1) -} <- genBST lowerBound x
                   rightNode {- resize (size - 1) -} <- genBST x upperBound
-                  return (Node <$> leftNode <*> x <*> rightNode)
+                  return (Node leftNode x rightNode)
               )
             ]
 

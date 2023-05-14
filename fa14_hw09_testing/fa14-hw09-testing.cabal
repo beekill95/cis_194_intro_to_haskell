@@ -64,4 +64,5 @@ test-suite fa14-hw09-tests
         base ^>=4.17.1.0,
         HUnit ^>=1.6,
         QuickCheck ^>=2.14.2,
+        random,
         fa14-hw09-testing
