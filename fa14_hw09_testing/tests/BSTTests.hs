@@ -9,10 +9,10 @@ import Test.QuickCheck
 -- TESTING CODE. (Students aren't expected to understand this yet, but it
 -- might be interesting to read, anyway!)
 
-instance Arbitrary a => Arbitrary (BST a) where
+instance (Arbitrary a) => Arbitrary (BST a) where
   arbitrary = sized mk_tree
 
-mk_tree :: Arbitrary a => Int -> Gen (BST a)
+mk_tree :: (Arbitrary a) => Int -> Gen (BST a)
 mk_tree 0 = return Leaf
 mk_tree n =
   frequency
@@ -28,8 +28,22 @@ mk_tree n =
 -- Exercise 7: An Arbitrary instance of BST that creates
 -- proper binary search trees.
 
-genBST :: a -> a -> Gen (BST a)
-genBST = _
+genBST :: (Ord a) => a -> a -> Gen (BST a)
+genBST lowerBound upperBound
+  | lowerBound >= upperBound = return Leaf
+  | otherwise =
+      sized $
+        \size ->
+          frequency
+            [ (1, return Leaf),
+              ( size,
+                do
+                  x <- choose (lowerBound, upperBound)
+                  leftNode {- resize (size - 1) -} <- genBST lowerBound x
+                  rightNode {- resize (size - 1) -} <- genBST x upperBound
+                  return (Node <$> leftNode <*> x <*> rightNode)
+              )
+            ]
 
 -- Tests
 
