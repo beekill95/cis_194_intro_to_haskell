@@ -1,8 +1,10 @@
 module Main where
 
 import BSTTests
+import ParserTests
 import RingTests
 import System.Exit
+import Test.HUnit
 import Test.QuickCheck
 
 propertyTests =
@@ -11,6 +13,11 @@ propertyTests =
       counterexample "BST Tests" bstTests
     ]
 
+unitTests = parserTests
+
 main = do
   propTestsResult <- quickCheckResult propertyTests
-  if isSuccess propTestsResult then exitSuccess else exitFailure
+  unitTestsResult <- runTestTT unitTests
+  if isSuccess propTestsResult && failures unitTestsResult == 0
+    then exitSuccess
+    else exitFailure

@@ -59,7 +59,8 @@ test-suite fa14-hw09-tests
     main-is: Main.hs
     other-modules:
         BSTTests,
-        RingTests
+        RingTests,
+        ParserTests
     build-depends:
         base ^>=4.17.1.0,
         HUnit ^>=1.6,
