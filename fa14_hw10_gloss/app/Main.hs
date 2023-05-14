@@ -9,6 +9,10 @@ width = 800
 height = 500
 offset = 200
 
+-- | Frames per second.
+fps :: Int
+fps = 60
+
 -- | Initial state of the game.
 initialState :: PongGame
 initialState =
@@ -19,15 +23,20 @@ initialState =
       pongVelocity = (75, 75)
     }
 
+-- | Window to draw our game.
 window = createWindow width height offset "Pong"
 
+-- | Background color of the window.
 background :: Color
 background = white
 
-drawing :: Float -> Picture
-drawing timeElapsed =
-  render (fromIntegral width) (fromIntegral height) $
-    updatePong timeElapsed initialState
-
+-- Our main function.
 main :: IO ()
-main = animate window background drawing
+main = simulate window background fps initialState render' update
+  where
+    h = fromIntegral height
+    w = fromIntegral width
+    halfHeight = h / 2
+
+    render' = render w h
+    update _ = updatePong halfHeight (-halfHeight)
