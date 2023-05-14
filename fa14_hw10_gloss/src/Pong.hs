@@ -1,7 +1,7 @@
 module Pong where
 
 import Graphics.Gloss
-import Graphics.Gloss.Interface.IO.Game (Event (EventKey), Key (Char))
+import Graphics.Gloss.Interface.IO.Game (Event (EventKey), Key (Char, SpecialKey), SpecialKey (KeyDown, KeyUp))
 
 createWindow :: Int -> Int -> Int -> String -> Display
 createWindow width height offset title =
@@ -19,6 +19,10 @@ data PongGame = PongGame
     leftPaddlePosition :: Float,
     -- | Position of the right paddle.
     rightPaddlePosition :: Float,
+    -- | Height of the paddles.
+    paddleHeight :: Float,
+    -- | Width of the paddles.
+    paddleWidth :: Float,
     -- | Location of the pong.
     pongPosition :: (Float, Float),
     -- | Velocity of the pong.
@@ -52,15 +56,56 @@ bouncePongOffWalls topWall bottomWall state
 -- | Handle user inputs to move the paddles.
 -- w and s to move the left paddle up and down, respectively.
 -- Arrow ↑ and ↓ to move the right paddle up and down, respectively.
--- TODO
-handleUserInput :: Event -> PongGame -> PongGame
-handleUserInput (EventKey c _ _ _) state = case c of
-  (Char 's') -> state
-  _ -> state
+handleUserInput :: Float -> Float -> Event -> PongGame -> PongGame
+handleUserInput topWall bottomWall (EventKey c _ _ _) state =
+  case c of
+    (Char 'w') -> state {leftPaddlePosition = paddleUp' leftPaddle}
+    (Char 's') -> state {leftPaddlePosition = paddleDown' leftPaddle}
+    (SpecialKey KeyUp) -> state {rightPaddlePosition = paddleUp' rightPaddle}
+    (SpecialKey KeyDown) -> state {rightPaddlePosition = paddleDown' rightPaddle}
+    _ -> state
+  where
+    moveDistance = 20
+    paddleUp' = paddleUp moveDistance topWall (paddleHeight state)
+    paddleDown' = paddleDown moveDistance bottomWall (paddleHeight state)
 
--- paddleUp :: Float -> Float -> Float -> Float
--- paddleUp inc topWall paddle =
--- paddleDown = _ - 5
+    leftPaddle = leftPaddlePosition state
+    rightPaddle = rightPaddlePosition state
+handleUserInput _ _ _ state = state
+
+-- | Move the paddle up.
+paddleUp ::
+  -- | How far should the paddle move up.
+  Float ->
+  -- | The position of the top wall.
+  Float ->
+  -- | The height of the paddle.
+  Float ->
+  -- | The position of the paddle.
+  Float ->
+  -- | The position of the paddle after moving.
+  Float
+paddleUp inc topWall paddleHeight paddle =
+  min (paddle + inc) (topWall - halfHeight)
+  where
+    halfHeight = paddleHeight / 2
+
+-- | Move the paddle down.
+paddleDown ::
+  -- | How far should the paddle move down.
+  Float ->
+  -- | The position of the bottom wall.
+  Float ->
+  -- | The height of the paddle.
+  Float ->
+  -- | The position of the paddle.
+  Float ->
+  -- | The position of the paddle after moving.
+  Float
+paddleDown dec bottomWall paddleHeight paddle =
+  max (paddle - dec) (bottomWall + halfHeight)
+  where
+    halfHeight = paddleHeight / 2
 
 -- Render game state.
 render :: Float -> Float -> PongGame -> Picture
@@ -73,10 +118,10 @@ render w h gameState =
   where
     -- Paddles.
     paddleColor = light $ light blue
-    paddleWidth = 30
-    paddleHeight = 150
-    leftPaddle = makePaddle paddleWidth paddleHeight paddleColor (-w / 2)
-    rightPaddle = makePaddle paddleWidth paddleHeight paddleColor (w / 2)
+    pw = paddleWidth gameState
+    ph = paddleHeight gameState
+    leftPaddle = makePaddle pw ph paddleColor (-w / 2)
+    rightPaddle = makePaddle pw ph paddleColor (w / 2)
 
     -- Pong.
     pongColor = dark red

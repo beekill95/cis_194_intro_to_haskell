@@ -19,6 +19,8 @@ initialState =
   PongGame
     { leftPaddlePosition = 0,
       rightPaddlePosition = 0,
+      paddleHeight = 150,
+      paddleWidth = 30,
       pongPosition = (0, 0),
       pongVelocity = (75, 75)
     }
@@ -32,11 +34,12 @@ background = white
 
 -- Our main function.
 main :: IO ()
-main = simulate window background fps initialState render' update
+main = play window background fps initialState render' handleInput update
   where
     h = fromIntegral height
     w = fromIntegral width
     halfHeight = h / 2
 
     render' = render w h
-    update _ = updatePong halfHeight (-halfHeight)
+    update = updatePong halfHeight (-halfHeight)
+    handleInput = handleUserInput halfHeight (-halfHeight)
