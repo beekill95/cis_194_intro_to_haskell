@@ -21,6 +21,7 @@ initialState =
       rightPaddlePosition = 0,
       paddleHeight = 150,
       paddleWidth = 30,
+      pongRadius = 10,
       pongPosition = (0, 0),
       pongVelocity = (75, 75)
     }
@@ -39,7 +40,8 @@ main = play window background fps initialState render' handleInput update
     h = fromIntegral height
     w = fromIntegral width
     halfHeight = h / 2
+    halfWidth = w / 2
 
     render' = render w h
-    update = updatePong halfHeight (-halfHeight)
+    update = updatePong halfHeight (-halfHeight) (-halfWidth) halfWidth
     handleInput = handleUserInput halfHeight (-halfHeight)

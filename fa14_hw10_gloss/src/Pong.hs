@@ -26,12 +26,31 @@ data PongGame = PongGame
     -- | Location of the pong.
     pongPosition :: (Float, Float),
     -- | Velocity of the pong.
-    pongVelocity :: (Float, Float)
+    pongVelocity :: (Float, Float),
+    -- | Radius of the pong.
+    pongRadius :: Float
   }
 
 -- | Update pong position, taking into the top and bottom walls.
-updatePong :: Float -> Float -> Float -> PongGame -> PongGame
-updatePong top bottom timeElapsed = bouncePongOffWalls top bottom . movePong timeElapsed
+updatePong ::
+  -- | Position of the top wall.
+  Float ->
+  -- | Position of the bottom wall.
+  Float ->
+  -- | Position of the left wall.
+  Float ->
+  -- | Position of the right wall.
+  Float ->
+  -- | Time elapsed since the last update.
+  Float ->
+  -- | Current game state.
+  PongGame ->
+  -- | The updated game state.
+  PongGame
+updatePong top bottom left right timeElapsed =
+  bouncePongOffPaddles left right
+    . bouncePongOffWalls top bottom
+    . movePong timeElapsed
 
 -- | Move the pong based on current velocity and time elapsed.
 movePong :: Float -> PongGame -> PongGame
@@ -52,6 +71,40 @@ bouncePongOffWalls topWall bottomWall state
   where
     (_, y) = pongPosition state
     (vx, vy) = pongVelocity state
+
+-- | Bounce the pong off the paddles.
+bouncePongOffPaddles :: Float -> Float -> PongGame -> PongGame
+bouncePongOffPaddles leftWall rightWall state
+  | hitLeftPaddle (poX - radius, poY)
+      || hitRightPaddle (poX + radius, poY) =
+      state {pongVelocity = (-vx, vy)}
+  | otherwise = state
+  where
+    radius = pongRadius state
+    (poX, poY) = pongPosition state
+    (vx, vy) = pongVelocity state
+
+    paddleSize = (paddleHeight state, paddleWidth state)
+    hitLeftPaddle = hitPaddle (leftWall, leftPaddlePosition state) paddleSize
+    hitRightPaddle = hitPaddle (rightWall, rightPaddlePosition state) paddleSize
+
+-- | Check if a pong is in contact with a paddle.
+hitPaddle ::
+  -- | (x, y) position of the paddle.
+  (Float, Float) ->
+  -- | (h, w) height and width of the paddle.
+  (Float, Float) ->
+  -- | (x, y) of the pong.
+  (Float, Float) ->
+  Bool
+hitPaddle (pX, pY) (pH, pW) (poX, poY) =
+  isIn (pX - halfWidth) (pX + halfWidth) poX
+    && isIn (pY - halfHeight) (pY + halfHeight) poY
+  where
+    halfWidth = pW / 2
+    halfHeight = pH / 2
+
+    isIn lower upper x = (lower <= x) && (x <= upper)
 
 -- | Handle user inputs to move the paddles.
 -- w and s to move the left paddle up and down, respectively.
@@ -125,5 +178,5 @@ render w h gameState =
 
     -- Pong.
     pongColor = dark red
-    pongRadius = 10
-    pong = makePong pongRadius pongColor
+    radius = pongRadius gameState
+    pong = makePong radius pongColor
