@@ -9,6 +9,16 @@ width = 800
 height = 500
 offset = 200
 
+-- | Initial state of the game.
+initialState :: PongGame
+initialState =
+  PongGame
+    { leftPaddlePosition = 0,
+      rightPaddlePosition = 0,
+      pongPosition = (0, 0),
+      pongVelocity = (75, 75)
+    }
+
 window = createWindow width height offset "Pong"
 
 background :: Color

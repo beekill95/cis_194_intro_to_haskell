@@ -24,16 +24,6 @@ data PongGame = PongGame
     pongVelocity :: (Float, Float)
   }
 
--- | Initial state of the game.
-initialState :: PongGame
-initialState =
-  PongGame
-    { leftPaddlePosition = 0,
-      rightPaddlePosition = 0,
-      pongPosition = (0, 0),
-      pongVelocity = (75, 75)
-    }
-
 -- | Update pong position based on current velocity
 -- and time elapsed.
 -- TODO: add collision detection.
