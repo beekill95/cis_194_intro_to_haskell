@@ -1,6 +1,7 @@
 module Pong where
 
 import Graphics.Gloss
+import Graphics.Gloss.Interface.IO.Game (Event (EventKey), Key (Char))
 
 createWindow :: Int -> Int -> Int -> String -> Display
 createWindow width height offset title =
@@ -24,8 +25,7 @@ data PongGame = PongGame
     pongVelocity :: (Float, Float)
   }
 
--- | Update pong position based on current velocity
--- and time elapsed.
+-- | Update pong position, taking into the top and bottom walls.
 updatePong :: Float -> Float -> Float -> PongGame -> PongGame
 updatePong top bottom timeElapsed = bouncePongOffWalls top bottom . movePong timeElapsed
 
@@ -48,6 +48,19 @@ bouncePongOffWalls topWall bottomWall state
   where
     (_, y) = pongPosition state
     (vx, vy) = pongVelocity state
+
+-- | Handle user inputs to move the paddles.
+-- w and s to move the left paddle up and down, respectively.
+-- Arrow ↑ and ↓ to move the right paddle up and down, respectively.
+-- TODO
+handleUserInput :: Event -> PongGame -> PongGame
+handleUserInput (EventKey c _ _ _) state = case c of
+  (Char 's') -> state
+  _ -> state
+
+-- paddleUp :: Float -> Float -> Float -> Float
+-- paddleUp inc topWall paddle =
+-- paddleDown = _ - 5
 
 -- Render game state.
 render :: Float -> Float -> PongGame -> Picture
