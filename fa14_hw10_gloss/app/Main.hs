@@ -14,8 +14,10 @@ window = createWindow width height offset "Pong"
 background :: Color
 background = white
 
-drawing :: Picture
-drawing = render (fromIntegral width) (fromIntegral height) initialState
+drawing :: Float -> Picture
+drawing timeElapsed =
+  render (fromIntegral width) (fromIntegral height) $
+    updatePong timeElapsed initialState
 
 main :: IO ()
-main = display window background drawing
+main = animate window background drawing
