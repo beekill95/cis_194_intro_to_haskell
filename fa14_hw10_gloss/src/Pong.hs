@@ -22,8 +22,40 @@ data PongGame = PongGame
     -- | Left player's score.
     leftScore :: Int,
     -- | Right player's score.
-    rightScore :: Int
+    rightScore :: Int,
+    -- | Top wall position.
+    topWall :: Float,
+    -- | Bottom wall position.
+    bottomWall :: Float,
+    -- | Left wall position,
+    -- this is also the horizontal position of the left paddle.
+    leftWall :: Float,
+    -- | Right wall position,
+    -- this is also the horizontal position of the right paddle.
+    rightWall :: Float
   }
+
+-- | Update winner players' score.
+data Winner = LeftPlayer | RightPlayer
+  deriving (Eq, Show)
+
+updateScore :: (Winner -> PongGame -> PongGame) -> PongGame -> PongGame
+updateScore f gameState = case findWinner gameState of
+  Just w -> f w gameState
+  Nothing -> gameState
+  where
+    findWinner :: PongGame -> Maybe Winner
+    findWinner
+      ( PongGame
+          { leftWall = lw,
+            rightWall = rw,
+            pongPosition = (x, _),
+            pongRadius = r
+          }
+        )
+        | x - r <= lw = Just RightPlayer
+        | x + r >= rw = Just LeftPlayer
+        | otherwise = Nothing
 
 -- | Update pong position, taking into the top and bottom walls.
 updatePong ::
