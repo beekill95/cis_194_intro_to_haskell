@@ -83,12 +83,13 @@ movePong timeElapsed state = state {pongPosition = (newX, newY)}
 -- | Bounce the pong off top and bottom walls.
 bouncePongOffWalls :: PongGame -> PongGame
 bouncePongOffWalls state
-  | y >= topWall state = state {pongVelocity = (vx, -vy)}
-  | y <= bottomWall state = state {pongVelocity = (vx, -vy)}
+  | y + r >= topWall state = state {pongVelocity = (vx, -vy)}
+  | y - r <= bottomWall state = state {pongVelocity = (vx, -vy)}
   | otherwise = state
   where
     (_, y) = pongPosition state
     (vx, vy) = pongVelocity state
+    r = pongRadius state
 
 -- | Bounce the pong off the paddles.
 bouncePongOffPaddles :: PongGame -> PongGame
