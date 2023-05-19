@@ -59,23 +59,15 @@ updateScore f gameState = case findWinner gameState of
 
 -- | Update pong position, taking into the top and bottom walls.
 updatePong ::
-  -- | Position of the top wall.
-  Float ->
-  -- | Position of the bottom wall.
-  Float ->
-  -- | Position of the left wall.
-  Float ->
-  -- | Position of the right wall.
-  Float ->
   -- | Time elapsed since the last update.
   Float ->
   -- | Current game state.
   PongGame ->
   -- | The updated game state.
   PongGame
-updatePong top bottom left right timeElapsed =
-  bouncePongOffPaddles left right
-    . bouncePongOffWalls top bottom
+updatePong timeElapsed =
+  bouncePongOffPaddles
+    . bouncePongOffWalls
     . movePong timeElapsed
 
 -- | Move the pong based on current velocity and time elapsed.
@@ -89,18 +81,18 @@ movePong timeElapsed state = state {pongPosition = (newX, newY)}
     newY = y + vy * timeElapsed
 
 -- | Bounce the pong off top and bottom walls.
-bouncePongOffWalls :: Float -> Float -> PongGame -> PongGame
-bouncePongOffWalls topWall bottomWall state
-  | y >= topWall = state {pongVelocity = (vx, -vy)}
-  | y <= bottomWall = state {pongVelocity = (vx, -vy)}
+bouncePongOffWalls :: PongGame -> PongGame
+bouncePongOffWalls state
+  | y >= topWall state = state {pongVelocity = (vx, -vy)}
+  | y <= bottomWall state = state {pongVelocity = (vx, -vy)}
   | otherwise = state
   where
     (_, y) = pongPosition state
     (vx, vy) = pongVelocity state
 
 -- | Bounce the pong off the paddles.
-bouncePongOffPaddles :: Float -> Float -> PongGame -> PongGame
-bouncePongOffPaddles leftWall rightWall state
+bouncePongOffPaddles :: PongGame -> PongGame
+bouncePongOffPaddles state
   | hitLeftPaddle (poX - radius, poY)
       || hitRightPaddle (poX + radius, poY) =
       state {pongVelocity = (-vx, vy)}
@@ -111,8 +103,8 @@ bouncePongOffPaddles leftWall rightWall state
     (vx, vy) = pongVelocity state
 
     paddleSize = (paddleHeight state, paddleWidth state)
-    hitLeftPaddle = hitPaddle (leftWall, leftPaddlePosition state) paddleSize
-    hitRightPaddle = hitPaddle (rightWall, rightPaddlePosition state) paddleSize
+    hitLeftPaddle = hitPaddle (leftWall state, leftPaddlePosition state) paddleSize
+    hitRightPaddle = hitPaddle (rightWall state, rightPaddlePosition state) paddleSize
 
 -- | Check if a pong is in contact with a paddle.
 hitPaddle ::
@@ -135,8 +127,8 @@ hitPaddle (pX, pY) (pH, pW) (poX, poY) =
 -- | Handle user inputs to move the paddles.
 -- w and s to move the left paddle up and down, respectively.
 -- Arrow ↑ and ↓ to move the right paddle up and down, respectively.
-handleUserInput :: Float -> Float -> Event -> PongGame -> PongGame
-handleUserInput topWall bottomWall (EventKey c _ _ _) state =
+handleUserInput :: Event -> PongGame -> PongGame
+handleUserInput (EventKey c _ _ _) state =
   case c of
     (Char 'w') -> state {leftPaddlePosition = paddleUp' leftPaddle}
     (Char 's') -> state {leftPaddlePosition = paddleDown' leftPaddle}
@@ -145,12 +137,12 @@ handleUserInput topWall bottomWall (EventKey c _ _ _) state =
     _ -> state
   where
     moveDistance = 20
-    paddleUp' = paddleUp moveDistance topWall (paddleHeight state)
-    paddleDown' = paddleDown moveDistance bottomWall (paddleHeight state)
+    paddleUp' = paddleUp moveDistance (topWall state) (paddleHeight state)
+    paddleDown' = paddleDown moveDistance (bottomWall state) (paddleHeight state)
 
     leftPaddle = leftPaddlePosition state
     rightPaddle = rightPaddlePosition state
-handleUserInput _ _ _ state = state
+handleUserInput _ state = state
 
 -- | Move the paddle up.
 paddleUp ::
@@ -220,8 +212,8 @@ render w h gameState =
     paddleColor = light $ light blue
     pw = paddleWidth gameState
     ph = paddleHeight gameState
-    leftPaddle = makePaddle pw ph paddleColor (-w / 2)
-    rightPaddle = makePaddle pw ph paddleColor (w / 2)
+    leftPaddle = makePaddle pw ph paddleColor (leftWall gameState)
+    rightPaddle = makePaddle pw ph paddleColor (rightWall gameState)
 
     -- Pong.
     pongColor = dark red

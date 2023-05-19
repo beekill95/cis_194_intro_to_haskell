@@ -49,21 +49,15 @@ resetGame winner game@(PongGame {leftScore = ls, rightScore = rs})
 
 -- Our main function.
 main :: IO ()
-main = play window background fps initialState render' handleInput update
+main = play window background fps initialState render' handleUserInput update
   where
     -- FIXME: will be refactored to used the value inside game state.
     h = fromIntegral height
     w = fromIntegral width
-    halfHeight = h / 2
-    halfWidth = w / 2
 
     -- Render game state.
     render' = render w h
 
     -- Update state function.
-    update t = updateScore' . updatePong' t
-    updatePong' = updatePong halfHeight (-halfHeight) (-halfWidth) halfWidth
+    update t = updateScore' . updatePong t
     updateScore' = updateScore resetGame
-
-    -- Handle user's inputs.
-    handleInput = handleUserInput halfHeight (-halfHeight)
