@@ -9,7 +9,7 @@ homework, and assignments in:
 
 For the two fall semesters,
 I will just cover the topics that are interesting to me:
-testing, gloss, and functional reactive programming.
+testing, gloss, functional reactive programming, and lenses.
 
 ## Assignments
 
