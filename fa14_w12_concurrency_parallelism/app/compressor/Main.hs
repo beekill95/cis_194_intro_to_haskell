@@ -13,10 +13,8 @@ main = do
   case line of
     "" -> return ()
     name -> do
-      handle print $ do
-        content <- L.readFile name
-        forkIO (compressFile name content)
-        return ()
+      content <- L.readFile name
+      forkIO (compressFile name content)
 
       main
   where
