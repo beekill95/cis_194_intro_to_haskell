@@ -92,6 +92,8 @@ executable fa16-hw11-frp
     -- Other library packages from which modules are imported.
     build-depends:
         base ^>=4.17.1.0,
+        haskell-gi-base,
+        gi-gtk ^>=3.0,
         fa16-hw11-frp
 
     -- Directories containing source files.
