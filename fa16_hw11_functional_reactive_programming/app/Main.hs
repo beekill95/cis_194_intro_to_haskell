@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedLabels #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# OPTIONS_GHC -Wno-unused-do-bind #-}
 
 module Main where
 
@@ -32,7 +33,7 @@ main = coinUI
 
 coinUI :: IO ()
 coinUI = do
-  _ <- Gtk.init Nothing
+  Gtk.init Nothing
 
   win <- new Gtk.Window [#title := "Banana"]
   on win #destroy Gtk.mainQuit
@@ -62,12 +63,14 @@ coinUI = do
         v <- read . unpack <$> get money #text
         let v' = v - 10 :: Integer
         set money [#text := (pack . show) v']
-        new
-          Gtk.MessageDialog
-          [ #title := "Yummy",
-            #text := "You bought a banana!"
-          ]
-        return ()
+        d <-
+          new
+            Gtk.MessageDialog
+            [ #text := "Yummy",
+              #secondaryText := "You bought a banana!"
+            ]
+
+        #showAll d
     )
 
   #add l add
