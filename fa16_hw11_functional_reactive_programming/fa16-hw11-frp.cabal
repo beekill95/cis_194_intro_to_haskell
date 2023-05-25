@@ -93,6 +93,7 @@ executable fa16-hw11-frp
     build-depends:
         base ^>=4.17.1.0,
         haskell-gi-base,
+        text,
         gi-gtk ^>=3.0,
         fa16-hw11-frp
 
